@@ -1,148 +1,112 @@
-# An H. Nguyen - Portfolio
+# An Nguyen - Personal Portfolio
 
-A modern, responsive portfolio website built with React, featuring smooth animations and a clean, minimalist design.
+Hey there! 👋 This is my personal portfolio website where I showcase my work as a software engineer. I built this with React and Framer Motion to create smooth, engaging interactions that reflect my passion for modern web development.
 
-## 🚀 Features
+## What's Inside
 
-- **Modern Design**: Clean, minimalist interface with gradient accents
-- **Smooth Animations**: Powered by Framer Motion for engaging interactions
-- **Responsive**: Fully responsive design that works on all devices
-- **Interactive Elements**: Hover effects, scroll animations, and smooth transitions
-- **Contact Form**: Functional contact form with validation
-- **Dark Theme**: Professional dark theme with purple/blue gradient accents
+This portfolio features:
+- **Interactive particle system** that orbits around your cursor (my favorite part!)
+- Smooth animations powered by Framer Motion
+- Responsive design that works on all devices
+- Dark theme with purple/blue gradients
+- Contact form that actually works
 
-## 📋 Sections
+## Sections
 
-1. **Hero Section**: Eye-catching introduction with call-to-action buttons
-2. **About Me**: Personal information and education details
-3. **Skills**: Interactive skill cards with proficiency levels
-4. **Projects**: Showcase of featured projects with tech stacks
-5. **Experience**: Timeline of work experience and achievements
-6. **Contact**: Contact form and contact information
-7. **Footer**: Social links and copyright information
+- **Hero**: My intro with animated text and those cool orbiting particles
+- **About**: My background and what drives me
+- **Skills**: My technical expertise with interactive cards
+- **Projects**: Some of my recent work with tech stacks
+- **Experience**: My professional journey so far
+- **Contact**: Get in touch with me
 
-## 🛠️ Technologies Used
+## Tech Stack
 
-- **React 18**: Modern React with hooks
-- **Framer Motion**: Smooth animations and transitions
-- **React Icons**: Beautiful icon library
-- **Lucide React**: Additional modern icons
-- **CSS3**: Custom styling with gradients and animations
-- **HTML5**: Semantic markup
+- React 18 with hooks
+- Framer Motion for animations
+- Lucide React for icons
+- Custom CSS with gradients
+- Responsive design
 
-## 📦 Installation
+## Getting Started
 
-1. **Clone the repository**
+1. Clone this repo
    ```bash
-   git clone <repository-url>
-   cd portfolio
+   git clone https://github.com/Noctural123/Personal-Porfolio.git
+   cd Personal-Porfolio
    ```
 
-2. **Install dependencies**
+2. Install dependencies
    ```bash
    npm install
    ```
 
-3. **Start the development server**
+3. Start the dev server
    ```bash
    npm start
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:3000` to view the portfolio
+4. Open http://localhost:3000 in your browser
 
-## 🚀 Deployment
+## Deployment
 
-### Build for Production
-```bash
-npm run build
-```
+I deployed this on Netlify. You can do the same:
 
-### Deploy to Netlify
-1. Connect your GitHub repository to Netlify
-2. Set build command: `npm run build`
-3. Set publish directory: `build`
+1. Build the project: `npm run build`
+2. Connect your GitHub repo to Netlify
+3. Set build command: `npm run build`
+4. Set publish directory: `build`
 
-### Deploy to Vercel
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel`
+## Customizing for Your Portfolio
 
-## 📁 Project Structure
+### Update Personal Info
+- Change the name, email, and social links in the components
+- Update the hero section with your own intro
+- Replace the profile picture
 
-```
-src/
-├── components/
-│   ├── Navbar.js          # Navigation component
-│   ├── Hero.js            # Hero section
-│   ├── About.js           # About section
-│   ├── Skills.js          # Skills section
-│   ├── Projects.js        # Projects section
-│   ├── Experience.js      # Experience section
-│   ├── Contact.js         # Contact section
-│   └── Footer.js          # Footer component
-├── App.js                 # Main app component
-├── index.js               # React entry point
-└── index.css              # Global styles
-```
+### Add Your Projects
+- Edit the Projects component with your own work
+- Include screenshots and live links
+- Update the tech stacks to match your projects
 
-## 🎨 Customization
-
-### Colors
-The portfolio uses a purple/blue gradient theme. You can customize the colors in `src/index.css`:
+### Modify the Theme
+The current theme uses purple/blue gradients. You can change the colors in `src/index.css`:
 
 ```css
 /* Main gradient */
 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-/* Background colors */
-background-color: #0a0a0a;  /* Dark background */
 ```
 
-### Content
-Update the content in each component file to match your information:
+## Project Structure
 
-- **Personal Info**: Update name, email, phone, and social links
-- **Projects**: Add your own projects with descriptions and tech stacks
-- **Experience**: Update work history and achievements
-- **Skills**: Modify skill levels and categories
+```
+src/
+├── components/
+│   ├── Navbar.js          # Navigation
+│   ├── Hero.js            # Hero with particles
+│   ├── About.js           # About section
+│   ├── Skills.js          # Skills cards
+│   ├── Projects.js        # Project showcase
+│   ├── Experience.js      # Work timeline
+│   ├── Contact.js         # Contact form
+│   └── Footer.js          # Footer
+├── App.js                 # Main app
+└── index.css              # Global styles
+```
 
-### Styling
-The portfolio uses custom CSS with utility classes. You can modify:
+## The Particle System
 
-- Font sizes and weights
-- Spacing and padding
-- Animation durations
-- Border radius and shadows
+One of my favorite features is the interactive particle system in the Hero section. The particles orbit around your cursor when you move it - it's a fun way to show off some JavaScript skills while keeping visitors engaged.
 
-## 📱 Responsive Design
-
-The portfolio is fully responsive with breakpoints:
-
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: > 1024px
-
-## 🔧 Available Scripts
-
-- `npm start`: Runs the app in development mode
-- `npm run build`: Builds the app for production
-- `npm test`: Launches the test runner
-- `npm run eject`: Ejects from Create React App (not recommended)
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Feel free to fork this project and customize it for your own portfolio!
-
-## 📞 Contact
+## Contact Me
 
 - **Email**: hongan.nguyen04@gmail.com
 - **GitHub**: [github.com/Noctural123](https://github.com/Noctural123)
 - **LinkedIn**: [linkedin.com/in/annguyen123](https://linkedin.com/in/annguyen123)
+- **Phone**: +1 (405) 501-1937
+
+Feel free to reach out if you want to collaborate on something cool or just chat about tech!
 
 ---
 
-Made with ❤️ by An H. Nguyen
+Built with React and lots of coffee ☕

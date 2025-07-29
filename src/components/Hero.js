@@ -26,13 +26,14 @@ const Hero = () => {
 
   // Initialize particles
   useEffect(() => {
-    const initialParticles = Array.from({ length: 150 }, () => ({
+    const initialParticles = Array.from({ length: 120 }, (_, index) => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
       size: Math.random() * 4 + 2,
-      opacity: Math.random() * 0.6 + 0.2
+      opacity: Math.random() * 0.6 + 0.2,
+      orbitAngle: (index / 120) * 2 * Math.PI // Updated to match new particle count
     }));
     setParticles(initialParticles);
   }, []);
@@ -40,7 +41,15 @@ const Hero = () => {
   // Handle mouse movement
   useEffect(() => {
     const handleMouseMove = (e) => {
-      mousePositionRef.current = { x: e.clientX, y: e.clientY };
+      // Get the particle container's position
+      const container = document.querySelector('#home');
+      const rect = container ? container.getBoundingClientRect() : { left: 0, top: 0 };
+      
+      // Calculate mouse position relative to the container
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
+      
+      mousePositionRef.current = { x: relativeX, y: relativeY };
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -57,47 +66,69 @@ const Hero = () => {
           const dy = mousePositionRef.current.y - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          // Very gentle repulsion from mouse
           let newVx = particle.vx;
           let newVy = particle.vy;
           
-          if (distance < 100 && distance > 0) {
-            const force = (100 - distance) / 100;
-            // Very subtle repulsion - particles keep moving
-            newVx -= (dx / distance) * force * 0.05;
-            newVy -= (dy / distance) * force * 0.05;
+          // Simple orbiting system
+          const orbitRange = 120; // Distance at which particles start orbiting
+          const orbitRadius = 50; // Distance from cursor to maintain
+          
+          if (distance < orbitRange && distance > 0) {
+            // Particle is in orbit range - make it orbit around cursor
+            
+            // Calculate angle from cursor to particle
+            const angle = Math.atan2(dy, dx);
+            
+            // Calculate perpendicular direction for orbit (clockwise)
+            const orbitX = Math.cos(angle + Math.PI/2);
+            const orbitY = Math.sin(angle + Math.PI/2);
+            
+            // Add orbital velocity
+            const orbitSpeed = 2.0;
+            newVx += orbitX * orbitSpeed;
+            newVy += orbitY * orbitSpeed;
+            
+            // Keep particles at the right distance from cursor
+            if (distance > orbitRadius + 5) {
+              // Pull inward
+              newVx += (dx / distance) * 0.5;
+              newVy += (dy / distance) * 0.5;
+            } else if (distance < orbitRadius - 5) {
+              // Push outward
+              newVx -= (dx / distance) * 0.5;
+              newVy -= (dy / distance) * 0.5;
+            }
+          } else {
+            // Normal random movement when not near cursor
+            newVx += (Math.random() - 0.5) * 0.1;
+            newVy += (Math.random() - 0.5) * 0.1;
           }
           
           // Update position
           let newX = particle.x + newVx;
           let newY = particle.y + newVy;
           
-          // Bounce off edges gently
+          // Bounce off edges
           if (newX < 0 || newX > window.innerWidth) {
-            newVx *= -0.9;
+            newVx *= -0.8;
             newX = newX < 0 ? 0 : window.innerWidth;
           }
           if (newY < 0 || newY > window.innerHeight) {
-            newVy *= -0.9;
+            newVy *= -0.8;
             newY = newY < 0 ? 0 : window.innerHeight;
           }
           
-          // Add subtle random movement to keep particles alive
-          newVx += (Math.random() - 0.5) * 0.005;
-          newVy += (Math.random() - 0.5) * 0.005;
+          // Apply friction
+          newVx *= 0.98;
+          newVy *= 0.98;
           
-          // Ensure minimum velocity so particles never stop
-          const minVelocity = 0.1;
-          const currentSpeed = Math.sqrt(newVx * newVx + newVy * newVy);
-          if (currentSpeed < minVelocity) {
-            const scale = minVelocity / currentSpeed;
-            newVx *= scale;
-            newVy *= scale;
+          // Limit maximum speed
+          const maxSpeed = 4.0;
+          const speed = Math.sqrt(newVx * newVx + newVy * newVy);
+          if (speed > maxSpeed) {
+            newVx = (newVx / speed) * maxSpeed;
+            newVy = (newVy / speed) * maxSpeed;
           }
-          
-          // Keep velocity within reasonable bounds
-          newVx = Math.max(-1.5, Math.min(1.5, newVx));
-          newVy = Math.max(-1.5, Math.min(1.5, newVy));
           
           return {
             ...particle,
@@ -110,7 +141,7 @@ const Hero = () => {
       );
     };
 
-    const interval = setInterval(animateParticles, 16); // 60fps
+    const interval = setInterval(animateParticles, 20); // Increased frequency for smoother animation
     return () => clearInterval(interval);
   }, []); // Removed mousePosition dependency
 

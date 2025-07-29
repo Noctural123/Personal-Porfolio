@@ -1,0 +1,54 @@
+<div style="font-family: system-ui, sans-serif, Arial; font-size: 14px; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+    <h1 style="margin: 0; font-size: 24px; font-weight: 600;">New Contact Form Message</h1>
+    <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">You have received a new message from your portfolio website</p>
+  </div>
+
+  <!-- Content -->
+  <div style="padding: 30px 20px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-top: none;">
+    <!-- Sender Info -->
+    <div style="background-color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <h2 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 8px;">
+        📧 Contact Information
+      </h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div>
+          <strong style="color: #667eea;">Name:</strong><br>
+          <span style="color: #2c3e50;">{{name}}</span>
+        </div>
+        <div>
+          <strong style="color: #667eea;">Email:</strong><br>
+          <span style="color: #2c3e50;">{{email}}</span>
+        </div>
+      </div>
+      <div style="margin-top: 15px;">
+        <strong style="color: #667eea;">Subject:</strong><br>
+        <span style="color: #2c3e50;">{{title}}</span>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; border-bottom: 1px solid #e9ecef; padding-bottom: 8px;">
+        💬 Message
+      </h3>
+      <div style="color: #2c3e50; line-height: 1.6; font-size: 15px;">
+        {{message}}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #667eea;">
+      <p style="margin: 0; color: #2c3e50; font-size: 14px;">
+        <strong>Reply to:</strong> {{email}}<br>
+        <strong>Received at:</strong> {{time}}
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background-color: #2c3e50; color: white; padding: 15px 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px;">
+    <p style="margin: 0;">This message was sent from your portfolio contact form via EmailJS</p>
+  </div>
+</div> 

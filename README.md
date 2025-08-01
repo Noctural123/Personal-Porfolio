@@ -19,4 +19,7 @@ npm run dev
 
 ---
 
-[Live Demo](your-deployment-url-here)
+**Contact:**
+- Email: hongan.nguyen04@gmail.com
+- GitHub: [github.com/Noctural123](https://github.com/Noctural123)
+- LinkedIn: [linkedin.com/in/annguyen123](https://linkedin.com/in/annguyen123)

@@ -6,6 +6,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Leadership from './components/Leadership';
+import Personal from './components/Personal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -41,10 +42,17 @@ function App() {
       <Navbar />
       <main>
         <Hero />
+        <div className="h-px bg-gray-700 opacity-30"></div>
         <About />
+        <div className="h-px bg-gray-700 opacity-30"></div>
         <Projects />
+        <div className="h-px bg-gray-700 opacity-30"></div>
         <Experience />
+        <div className="h-px bg-gray-700 opacity-30"></div>
         <Leadership />
+        <div className="h-px bg-gray-700 opacity-30"></div>
+        <Personal />
+        <div className="h-px bg-gray-700 opacity-30"></div>
         <Contact />
       </main>
       <Footer />

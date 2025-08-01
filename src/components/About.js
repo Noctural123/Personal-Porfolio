@@ -41,34 +41,43 @@ const About = () => {
           About Me
         </motion.h2>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="text-2xl font-semibold mb-6 gradient-text">
-              Software Engineer & Problem Solver
+            <h3 className="text-3xl font-bold mb-6 gradient-text">
+              Here are some things about me!
             </h3>
             
             <div className="space-y-4" style={{ color: 'var(--text-secondary)' }}>
-              <p>
-                I'm a passionate software engineer with a strong foundation in computer science and mathematics. 
-                Currently pursuing my Master's degree at the University of Oklahoma, I combine theoretical knowledge 
-                with practical experience to create innovative solutions.
-              </p>
-              
-              <p>
-                With experience at companies like Paycom and Tinker Air Force Base, I've developed expertise in 
-                full-stack development, working with technologies like React, TypeScript, PHP, and various databases. 
-                I'm particularly interested in AI/ML applications and building scalable, user-centric applications.
-              </p>
-              
-              <p>
-                When I'm not coding, I lead youth groups at the Vietnamese Eucharistic Youth Movement, where I 
-                cultivate leadership skills and cultural education among children. I also enjoy lion dancing during 
-                Lunar New Year celebrations.
-              </p>
+              <ul className="space-y-3 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span><span className="gradient-text font-semibold">Accelerated Master's Student</span> at OU with strong foundation in computer science and mathematics</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span><span className="gradient-text font-semibold">3 Years of Internship Experience</span> at Paycom and Tinker Air Force Base</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span><span className="gradient-text font-semibold">Full-Stack Development</span> expertise: React, TypeScript, PHP, Java, Python, JavaScript, C#</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span>Passionate about <span className="gradient-text font-semibold">AI/ML</span> applications and building scalable, user-centric solutions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span><span className="gradient-text font-semibold">Youth leader</span> at Vietnamese Eucharistic Youth Movement</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-primary mt-1">•</span>
+                  <span><span className="gradient-text font-semibold">Lion Dancer</span> during Lunar New Year celebrations</span>
+                </li>
+              </ul>
             </div>
           </motion.div>
 
@@ -78,7 +87,7 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-semibold mb-6 gradient-text">
+            <h3 className="text-3xl font-bold mb-6 gradient-text">
               Education
             </h3>
             
@@ -104,7 +113,7 @@ const About = () => {
                 
                 <div className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                   <div className="flex items-center gap-2">
-                    <MapPin size={16} style={{ color: 'var(--text-secondary)' }} />
+                    <span className="text-accent-primary">🏫</span>
                     <span>{edu.school}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -112,8 +121,12 @@ const About = () => {
                     <span>{edu.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
+                    <span className="text-accent-primary">★</span>
+                    <span>GPA: {edu.gpa}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
-                    <span>GPA: {edu.gpa} • Graduation: {edu.graduation}</span>
+                    <span>Graduation: {edu.graduation}</span>
                   </div>
                 </div>
               </motion.div>

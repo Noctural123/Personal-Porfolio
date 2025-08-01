@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Award, Users, Heart, Globe } from 'lucide-react';
+import { Award, Users, Heart, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Leadership = () => {
   const [ref, inView] = useInView({
@@ -9,38 +9,85 @@ const Leadership = () => {
     threshold: 0.1,
   });
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentVEYMIndex, setCurrentVEYMIndex] = useState(0);
+  
+  const lionDanceImages = [
+    '/Lion Dance/LionDance1.jpeg',
+    '/Lion Dance/LionDance2.jpeg',
+    '/Lion Dance/LionDance3.jpeg',
+    '/Lion Dance/LionDance4.png',
+    '/Lion Dance/LionDance5.png'
+  ];
+
+  const veymImages = [
+    '/VEYM/VEYM1.png',
+    '/VEYM/VEYM2.png',
+    '/VEYM/VEYM3.png',
+    '/VEYM/VEYM4.png',
+    '/VEYM/VEYM5.png'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === lionDanceImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Changed from 3000 to 5000ms (5 seconds)
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentVEYMIndex((prevIndex) => 
+        prevIndex === veymImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? lionDanceImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === lionDanceImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const goToVEYMPrevious = () => {
+    setCurrentVEYMIndex((prevIndex) => 
+      prevIndex === 0 ? veymImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToVEYMNext = () => {
+    setCurrentVEYMIndex((prevIndex) => 
+      prevIndex === veymImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   const leadershipData = [
     {
       title: "Vietnamese Eucharistic Youth Movement",
-      role: "Youth Leader & Mentor",
-      period: "2019 - Present",
-      description: "Lead youth development programs, organize community events, and mentor young members in personal and spiritual growth. Coordinate volunteer activities and foster leadership skills among participants.",
+      role: "Youth Leader",
+      period: "Aug 2014 - Current",
+      description: "Cultivating faith, leadership, and responsibility among +60 children through religious and cultural education in a community of 300+ people. Coordinate lessons, activities, games, events, and camps for the youth.",
       icon: Users,
       color: "#667eea"
     },
     {
-      title: "University of Oklahoma",
-      role: "Student Organization Leader",
-      period: "2020 - 2022",
-      description: "Led various student organizations, organized campus events, and represented student interests. Coordinated with faculty and administration to improve student experience.",
+      title: "Lion Dancing",
+      role: "Volunteering",
+      period: "Aug 2014 - Current",
+      description: "Perform lion dancing during Lunar New Year to raise funds for the church, while participating in off-season gigs throughout the year. Train younger children in lion dancing and cultural appreciation. Devote 200+ hours annually to practice, performances, and teaching.",
       icon: Award,
       color: "#764ba2"
-    },
-    {
-      title: "Community Service",
-      role: "Volunteer Coordinator",
-      period: "2018 - Present",
-      description: "Organize and participate in community service projects, food drives, and local charity events. Coordinate volunteer efforts and build partnerships with local organizations.",
-      icon: Heart,
-      color: "#f093fb"
-    },
-    {
-      title: "International Outreach",
-      role: "Cultural Ambassador",
-      period: "2021 - Present",
-      description: "Promote cultural understanding and international collaboration through various programs and events. Facilitate cross-cultural communication and organize international student support initiatives.",
-      icon: Globe,
-      color: "#667eea"
     }
   ];
 
@@ -62,106 +109,164 @@ const Leadership = () => {
           Leadership & Volunteering
         </motion.h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-12">
           {leadershipData.map((item, index) => (
-            <motion.div
-              key={item.title}
+            <motion.div 
+              key={item.title} 
+              className="flex flex-col lg:flex-row gap-8 items-start"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              whileHover={{ 
-                scale: 1.02, 
-                y: -5,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
-              }}
-              className="group relative"
             >
-              <div className="p-8 rounded-2xl border transition-all duration-500 h-full" style={{ 
-                backgroundColor: 'var(--bg-secondary)', 
-                borderColor: 'var(--border-color)',
-                backdropFilter: 'blur(20px)'
-              }}>
-                <div className="flex items-start space-x-6">
-                  <motion.div 
-                    className="flex-shrink-0"
-                    whileHover={{ rotate: 360, scale: 1.2 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <div 
-                      className="p-4 rounded-2xl text-3xl"
-                      style={{ 
-                        backgroundColor: `${item.color}20`,
-                        color: item.color
-                      }}
-                    >
-                      <item.icon size={32} />
-                    </div>
-                  </motion.div>
-                  
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-2 group-hover:gradient-text transition-all duration-300" style={{ color: 'var(--text-primary)' }}>
-                      {item.title}
-                    </h3>
-                    <p className="text-lg font-semibold mb-1" style={{ color: 'var(--accent-primary)' }}>
-                      {item.role}
-                    </p>
-                    <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                      {item.period}
-                    </p>
-                    <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                      {item.description}
-                    </p>
-                  </div>
+              {/* Description Card - Left Side (30%) */}
+              <motion.div
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -5,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                }}
+                className="group relative lg:w-[30%] w-full"
+              >
+                <div className="p-6 rounded-2xl border transition-all duration-500 h-full" style={{ 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  borderColor: 'var(--border-color)',
+                  backdropFilter: 'blur(20px)'
+                }}>
+                  <h3 className="text-xl font-bold mb-2 group-hover:gradient-text transition-all duration-300" style={{ color: 'var(--text-primary)' }}>
+                    {item.title}
+                  </h3>
+                  <p className="text-lg font-semibold mb-1" style={{ color: 'var(--accent-primary)' }}>
+                    {item.role}
+                  </p>
+                  <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                    {item.period}
+                  </p>
+                  <p className="leading-relaxed text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    {item.description}
+                  </p>
                 </div>
-              </div>
+              </motion.div>
+
+              {/* Image Card - Right Side (70%) */}
+              <motion.div
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -5,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                }}
+                className="group relative lg:w-[70%] w-full"
+              >
+                <div className="p-4 rounded-2xl border transition-all duration-500" style={{ 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  borderColor: 'var(--border-color)',
+                  backdropFilter: 'blur(20px)'
+                }}>
+                  {item.title === "Vietnamese Eucharistic Youth Movement" && (
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="rounded-xl overflow-hidden border relative h-[500px] flex items-center justify-center"
+                      style={{ borderColor: 'var(--border-color)' }}
+                    >
+                      <motion.img 
+                        key={currentVEYMIndex}
+                        src={veymImages[currentVEYMIndex]} 
+                        alt="Vietnamese Eucharistic Youth Movement" 
+                        className="w-full h-full object-contain"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={goToVEYMPrevious}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      
+                      <button
+                        onClick={goToVEYMNext}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {veymImages.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentVEYMIndex(index)}
+                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                              index === currentVEYMIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {item.title === "Lion Dancing" && (
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="rounded-xl overflow-hidden border relative h-[500px] flex items-center justify-center"
+                      style={{ borderColor: 'var(--border-color)' }}
+                    >
+                      <motion.img 
+                        key={currentImageIndex}
+                        src={lionDanceImages[currentImageIndex]} 
+                        alt="Lion Dancing" 
+                        className="w-full h-full object-contain"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={goToPrevious}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      
+                      <button
+                        onClick={goToNext}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {lionDanceImages.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                              index === currentImageIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
-
-        {/* Additional volunteering highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="mt-16"
-        >
-          <h3 className="text-2xl font-bold mb-10 gradient-text text-center">
-            Additional Community Involvement
-          </h3>
-          
-          <div className="p-8 rounded-2xl border" style={{ 
-            backgroundColor: 'var(--bg-secondary)', 
-            borderColor: 'var(--border-color)',
-            backdropFilter: 'blur(20px)'
-          }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                "Food Bank Volunteering",
-                "Youth Mentorship Programs", 
-                "Campus Event Organization",
-                "Cultural Festival Planning",
-                "Student Government",
-                "Community Clean-up Initiatives"
-              ].map((activity, index) => (
-                <motion.div
-                  key={activity}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  className="px-6 py-4 rounded-xl text-center border transition-all duration-300"
-                  style={{ 
-                    backgroundColor: 'var(--bg-primary)', 
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-primary)'
-                  }}
-                >
-                  <span className="font-medium">{activity}</span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

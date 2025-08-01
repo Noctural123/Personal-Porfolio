@@ -3,26 +3,78 @@ import { Github, Linkedin, Mail, Download, MapPin, Phone, ArrowRight } from 'luc
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Hero = () => {
-  const [currentText, setCurrentText] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [particles, setParticles] = useState([]);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const canvasRef = useRef(null);
+  const typewriterRef = useRef({
+    currentRoleIndex: 0,
+    charIndex: 0,
+    isDeleting: false,
+    timeoutId: null
+  });
 
   const roles = [
     "Software Engineer",
-    "Problem Solver", 
     "Full-Stack Developer",
-    "AI Enthusiast",
-    "Community Leader"
+    "Formula 1 Fan",
+    "Lion Dancer",
+    "Creative Problem Solver",
+    "Learner",
   ];
 
+  // Simple typewriter effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentText((prev) => (prev + 1) % roles.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+    let currentRoleIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let timeoutId = null;
+    
+    const typeWriter = () => {
+      const currentRole = roles[currentRoleIndex];
+      
+      if (!isDeleting && charIndex < currentRole.length) {
+        // Typing
+        setCurrentText(currentRole.slice(0, charIndex + 1));
+        setIsTyping(true);
+        charIndex++;
+        timeoutId = setTimeout(typeWriter, 120);
+      } else if (!isDeleting && charIndex >= currentRole.length) {
+        // Finished typing, wait then start deleting
+        setIsTyping(false);
+        timeoutId = setTimeout(() => {
+          isDeleting = true;
+          typeWriter();
+        }, 3000);
+      } else if (isDeleting && charIndex > 0) {
+        // Deleting
+        setCurrentText(currentRole.slice(0, charIndex - 1));
+        setIsTyping(true);
+        charIndex--;
+        timeoutId = setTimeout(typeWriter, 80);
+      } else if (isDeleting && charIndex <= 0) {
+        // Finished deleting, move to next role
+        isDeleting = false;
+        currentRoleIndex = (currentRoleIndex + 1) % roles.length;
+        charIndex = 0;
+        setCurrentText('');
+        setIsTyping(false);
+        timeoutId = setTimeout(typeWriter, 1000);
+      }
+    };
+    
+    // Start the typewriter
+    timeoutId = setTimeout(typeWriter, 1000);
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []); // Empty dependency array - only run once
 
   // Initialize particles
   useEffect(() => {
@@ -213,9 +265,9 @@ const Hero = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
             {/* Left Column */}
-            <div className="space-y-8">
+            <div className="space-y-4">
               <motion.h1 
-                className="text-5xl lg:text-6xl font-bold"
+                className="text-6xl lg:text-7xl font-bold"
                 style={{ color: 'var(--text-primary)' }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -226,25 +278,44 @@ const Hero = () => {
               
               {/* Animated role text */}
               <motion.div
-                className="h-12 flex items-center"
+                className="h-12 flex flex-col items-start pb-16"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <AnimatePresence mode="wait">
-                  <motion.h2
-                    key={currentText}
-                    className="text-2xl lg:text-3xl font-semibold"
-                    style={{ color: 'var(--accent-primary)' }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {roles[currentText]}
-                  </motion.h2>
-                </AnimatePresence>
+                <motion.h2
+                  className="text-2xl lg:text-3xl font-semibold"
+                  style={{ color: 'var(--accent-primary)' }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  Hi, I'm a...
+                </motion.h2>
+                
+                <motion.h3
+                  className="text-xl lg:text-2xl font-medium mt-2 flex items-center italic"
+                  style={{ color: 'var(--text-secondary)' }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                >
+                  {currentText}
+                  {isTyping && (
+                    <motion.span
+                      className="ml-1"
+                      style={{ color: 'var(--accent-primary)' }}
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    >
+                      |
+                    </motion.span>
+                  )}
+                </motion.h3>
               </motion.div>
+              
+              {/* Spacer */}
+              <div className="h-8"></div>
               
               <motion.p 
                 className="text-lg leading-relaxed"
@@ -253,25 +324,8 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                I'm a passionate software engineer focused on building innovative web applications 
-                and scalable solutions. With expertise in modern web technologies, I create 
-                user-centric applications that deliver exceptional experiences.
+                I'm a developer with 3 years of internship experience, always learning and growing, one step at a time.
               </motion.p>
-              
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3" style={{ color: 'var(--text-secondary)' }}>
-                  <MapPin size={18} style={{ color: 'var(--accent-primary)' }} />
-                  <span>Oklahoma City, OK</span>
-                </div>
-                <div className="flex items-center space-x-3" style={{ color: 'var(--text-secondary)' }}>
-                  <Mail size={18} style={{ color: 'var(--accent-primary)' }} />
-                  <span>hongan.nguyen04@gmail.com</span>
-                </div>
-                <div className="flex items-center space-x-3" style={{ color: 'var(--text-secondary)' }}>
-                  <Phone size={18} style={{ color: 'var(--accent-primary)' }} />
-                  <span>+1 (405) 501-1937</span>
-                </div>
-              </div>
               
               <div className="flex space-x-4">
                 <motion.a

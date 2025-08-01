@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Heart } from 'lucide-react';
+import { Github, Linkedin, Mail, Heart, Sparkles } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -37,7 +37,7 @@ const Footer = () => {
             className="mb-8"
           >
             <h3 className="text-2xl font-bold gradient-text mb-4">
-              An H. Nguyen
+              An Nguyen
             </h3>
             <p className="max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
               Software Engineer passionate about building innovative solutions and creating impactful user experiences.
@@ -76,9 +76,8 @@ const Footer = () => {
             className="flex items-center justify-center space-x-2"
             style={{ color: 'var(--text-secondary)' }}
           >
-            <span>Made with</span>
-            <Heart size={16} style={{ color: 'var(--accent-primary)' }} />
-            <span>by An Nguyen • {currentYear}</span>
+            <Sparkles size={16} style={{ color: 'var(--accent-primary)' }} />
+            <span>An Nguyen • {currentYear}</span>
           </motion.div>
         </div>
       </div>

@@ -20,9 +20,9 @@ const Experience = () => {
         "Designed, created, and tested full-stack web applications using PHP, JavaScript, TypeScript, and MySQL",
         "Improved scalability and abstraction by developing components in React",
         "Enhanced logging granularity, increasing actionable error coverage by 40%",
-        "Built an internal proxy service to reveal black-box vendor behavior and streamline background check workflows"
+        "Built an internal proxy service to reveal black-box vendor behavior and streamline background check workflows using C# and .NET"
       ],
-      tech: ["PHP", "JavaScript", "TypeScript", "MySQL", "React"]
+      tech: ["React", "PHP", "JavaScript", "TypeScript", "MySQL", "C#", ".NET Frameworks"]
     },
     {
       title: "Software Engineering Intern",
@@ -45,6 +45,7 @@ const Experience = () => {
       description: "Collaborated multiple times a week with an engineering professor and mentor to conduct an SLR paper.",
       achievements: [
         "Analyzed research articles to explore the use of AI/ML in Racing Games",
+        "Reviewed and scanned over 600+ research articles to find the most relevant studies",
         "Presented research at the American Society for Engineering Education (ASEE) conference"
       ],
       tech: ["Research", "AI/ML", "Academic Writing", "Data Analysis"]
@@ -67,6 +68,15 @@ const Experience = () => {
         <div className="relative">
           {/* Timeline line */}
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500 to-blue-500 transform md:-translate-x-1/2"></div>
+          
+          {/* Animated timeline progress */}
+          <motion.div 
+            className="absolute left-4 md:left-1/2 top-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 transform md:-translate-x-1/2 origin-top"
+            style={{ zIndex: 5 }}
+            initial={{ scaleY: 0 }}
+            animate={inView ? { scaleY: 1 } : {}}
+            transition={{ duration: 2, ease: "easeOut" }}
+          ></motion.div>
 
           <div className="space-y-12">
             {experiences.map((exp, index) => (
@@ -109,10 +119,12 @@ const Experience = () => {
                           <span className="font-medium">{exp.company}</span>
                         </div>
                       </div>
-                      <span className="px-3 py-1 text-xs rounded-full" style={{ 
-                        backgroundColor: 'var(--accent-primary)', 
-                        color: 'white',
-                        opacity: 0.2
+                      <span className={`px-3 py-1 text-xs rounded-full border ${
+                        exp.period.split(' - ')[1] === 'Present' ? 'gradient-text' : ''
+                      }`} style={{ 
+                        borderColor: exp.period.split(' - ')[1] === 'Present' ? 'var(--accent-primary)' : 'var(--border-color)',
+                        color: exp.period.split(' - ')[1] === 'Present' ? 'transparent' : 'var(--text-secondary)',
+                        backgroundColor: exp.period.split(' - ')[1] === 'Present' ? 'transparent' : 'var(--bg-primary)'
                       }}>
                         {exp.period.split(' - ')[1] === 'Present' ? 'Current' : 'Past'}
                       </span>
@@ -169,39 +181,6 @@ const Experience = () => {
             ))}
           </div>
         </div>
-
-        {/* Leadership section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16"
-        >
-          <h3 className="text-2xl font-semibold mb-8 gradient-text text-center">
-            Leadership & Activities
-          </h3>
-          
-          <div className="p-6 rounded-lg border" style={{ 
-            backgroundColor: 'var(--bg-secondary)', 
-            borderColor: 'var(--border-color)' 
-          }}>
-            <div className="flex items-start gap-4">
-              <div style={{ color: 'var(--accent-primary)' }}>
-                <Building size={24} />
-              </div>
-              <div>
-                <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                  Vietnamese Eucharistic Youth Movement
-                </h4>
-                <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>Youth Leader, Lion Dancer • August 2014 - Current</p>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Cultivating faith, leadership, and responsibility among +60 children through religious and cultural education. 
-                  Fundraising for the church through lion dancing every Lunar New Year.
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

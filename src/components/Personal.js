@@ -209,12 +209,12 @@ const Personal = () => {
     {
       title: "Formula 1",
       subtitle: "Motorsports, Racing",
-      description: "I got into Formula 1 in 2023 and have been a fan ever since. I've yet to go to a race yet unfortunately but am planning on going in the very near future 🙏. My favorite drivers are Max Verstappen and Oscar Piastri. (Oscar Piastri for 2025 WDC).",
+      description: "I got into Formula 1 in 2023 and have been a fan ever since. I've yet to go to a race yet unfortunately but am planning on going in the very near future. My favorite drivers are Max Verstappen and Oscar Piastri. (Oscar Piastri for 2025 WDC).",
       icon: Car
     },
     {
       title: "Movies and Shows",
-      subtitle: "Entertainment",
+      subtitle: "Entertainment, Relaxation",
       description: "I'm a big fan of movies and shows. Some of my favorites are Interstellar, The Martian, HunterxHunter, Naruto, and many more! Right now, I'm currently watching One Piece and enjoying it a lot, though it's a bit long.",
       icon: Tv
     },
@@ -247,7 +247,7 @@ const Personal = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="section-title">Components of My Life</h2>
+          <h2 className="section-title">Personal Hobbies</h2>
           <p className="text-lg mt-4" style={{ color: 'var(--text-secondary)' }}>
             Outside of my technical background, here are some of my current hobbies...
           </p>
@@ -281,10 +281,10 @@ const Personal = () => {
                   </div>
                   
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    <h3 className="text-2xl font-bold mb-1 text-white">
                       {hobby.title}
                     </h3>
-                    <h4 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+                    <h4 className="text-sm font-medium mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                       {hobby.subtitle}
                     </h4>
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>

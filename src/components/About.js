@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { GraduationCap, MapPin, Calendar } from 'lucide-react';
+import { GraduationCap, MapPin, Calendar, Star } from 'lucide-react';
 
 const About = () => {
   const [ref, inView] = useInView({
@@ -48,7 +48,7 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h3 className="text-3xl font-bold mb-6 gradient-text">
-              Here are some things about me!
+              A bit about myself
             </h3>
             
             <div className="space-y-4" style={{ color: 'var(--text-secondary)' }}>
@@ -113,7 +113,7 @@ const About = () => {
                 
                 <div className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                   <div className="flex items-center gap-2">
-                    <span className="text-accent-primary">🏫</span>
+                    <GraduationCap size={16} style={{ color: 'var(--text-secondary)' }} />
                     <span>{edu.school}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ const About = () => {
                     <span>{edu.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-accent-primary">★</span>
+                    <Star size={16} style={{ color: 'var(--accent-primary)' }} />
                     <span>GPA: {edu.gpa}</span>
                   </div>
                   <div className="flex items-center gap-2">

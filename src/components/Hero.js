@@ -22,8 +22,8 @@ const Hero = () => {
     "Full-Stack Developer",
     "Formula 1 Fan",
     "Lion Dancer",
-    "Creative Problem Solver",
-    "Learner",
+    "Problem Solver",
+    "Avid Learner",
   ];
 
   // Simple typewriter effect

@@ -21,5 +21,5 @@ npm run dev
 
 **Contact:**
 - Email: hongan.nguyen04@gmail.com
-- GitHub: [github.com/Noctural123](https://github.com/Noctural123)
+- Phone: (405)-501-1937
 - LinkedIn: [linkedin.com/in/annguyen123](https://linkedin.com/in/annguyen123)

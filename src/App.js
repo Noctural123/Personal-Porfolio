@@ -9,6 +9,7 @@ import Leadership from './components/Leadership';
 import Personal from './components/Personal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import FlagDisplay from './components/FlagDisplay';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +55,11 @@ function App() {
         <Personal />
         <div className="h-px bg-gray-700 opacity-30"></div>
         <Contact />
+        <div className="h-px bg-gray-700 opacity-30"></div>
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-center mb-8">Ramp Challenge Solution</h1>
+          <FlagDisplay />
+        </div>
       </main>
       <Footer />
     </div>

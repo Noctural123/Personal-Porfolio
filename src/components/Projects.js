@@ -178,6 +178,13 @@ const Projects = () => {
                         Complete
                       </span>
                     )}
+                    {project.title === "YOLOV8 Real Time Object Detection" && (
+                      <span className="px-2 py-1 text-xs rounded-full gradient-text border" style={{ 
+                        borderColor: 'var(--accent-primary)'
+                      }}>
+                        Complete
+                      </span>
+                    )}
                   </div>
 
                   <p className="text-sm mb-4 leading-relaxed flex-grow" style={{ color: 'var(--text-secondary)' }}>

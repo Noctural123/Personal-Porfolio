@@ -9,6 +9,7 @@ const Personal = () => {
     threshold: 0.1,
   });
 
+  const hobbiesContainerRef = React.useRef(null);
   const [currentTravelIndex, setCurrentTravelIndex] = useState(0);
   const [currentF1Index, setCurrentF1Index] = useState(0);
   const [currentTVIndex, setCurrentTVIndex] = useState(0);
@@ -16,6 +17,7 @@ const Personal = () => {
   const [currentGamesIndex, setCurrentGamesIndex] = useState(0);
   const [expandedImages, setExpandedImages] = useState(null);
   const [expandedIndex, setExpandedIndex] = useState(0);
+  const [currentHobbyIndex, setCurrentHobbyIndex] = useState(0);
 
   // Image arrays
   const travelImages = [
@@ -174,6 +176,31 @@ const Personal = () => {
     );
   };
 
+  const goToHobbyPrevious = () => {
+    setCurrentHobbyIndex((prevIndex) => 
+      prevIndex === 0 ? hobbies.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToHobbyNext = () => {
+    setCurrentHobbyIndex((prevIndex) => 
+      prevIndex === hobbies.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Scroll to current hobby when index changes
+  useEffect(() => {
+    if (hobbiesContainerRef.current) {
+      const container = hobbiesContainerRef.current;
+      const hobbyWidth = 420 + 24; // card width + gap
+      const scrollPosition = currentHobbyIndex * hobbyWidth;
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentHobbyIndex]);
+
   const expandImages = (images, startIndex = 0) => {
     setExpandedImages(images);
     setExpandedIndex(startIndex);
@@ -250,388 +277,408 @@ const Personal = () => {
         </motion.div>
 
         {/* Horizontal sliding panels */}
-        <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide px-4">
-          {hobbies.map((hobby, index) => (
-            <motion.div
-              key={hobby.title}
-              initial={{ opacity: 0, x: 50 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="flex-shrink-0 w-[420px] h-[550px] rounded-3xl border-2 overflow-hidden relative group"
-              style={{ 
-                backgroundColor: 'var(--bg-secondary)', 
-                borderColor: 'var(--border-color)',
-                backdropFilter: 'blur(20px)'
-              }}
-            >
-              {/* Background gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 opacity-80"></div>
-              
-              {/* Content */}
-              <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-500/40">
-                      <hobby.icon size={24} style={{ color: 'var(--accent-primary)' }} />
+        <div className="relative">
+          {/* Left Arrow */}
+          <button
+            onClick={goToHobbyPrevious}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+            aria-label="Previous hobby"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          {/* Right Arrow */}
+          <button
+            onClick={goToHobbyNext}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+            aria-label="Next hobby"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide px-4" ref={hobbiesContainerRef}>
+            {hobbies.map((hobby, index) => (
+              <motion.div
+                key={hobby.title}
+                initial={{ opacity: 0, x: 50 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="flex-shrink-0 w-[420px] h-[550px] rounded-3xl border-2 overflow-hidden relative group"
+                style={{ 
+                  backgroundColor: 'var(--bg-secondary)', 
+                  borderColor: 'var(--border-color)',
+                  backdropFilter: 'blur(20px)'
+                }}
+              >
+                {/* Background gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 opacity-80"></div>
+                
+                {/* Content */}
+                <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-500/40">
+                        <hobby.icon size={24} style={{ color: 'var(--accent-primary)' }} />
+                      </div>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h3 className="text-2xl font-bold mb-1 text-white">
+                        {hobby.title}
+                      </h3>
+                      <h4 className="text-sm font-medium mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                        {hobby.subtitle}
+                      </h4>
+                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                        {hobby.description}
+                      </p>
                     </div>
                   </div>
                   
-                  <div className="mb-4">
-                    <h3 className="text-2xl font-bold mb-1 text-white">
-                      {hobby.title}
-                    </h3>
-                    <h4 className="text-sm font-medium mb-3 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                      {hobby.subtitle}
-                    </h4>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                      {hobby.description}
-                    </p>
-                  </div>
+                  {/* Image placeholder area */}
+                  {hobby.title === "Traveling" ? (
+                    <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
+                      onClick={() => expandImages(travelImages, currentTravelIndex)}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img 
+                          key={currentTravelIndex}
+                          src={travelImages[currentTravelIndex]} 
+                          alt="Travel" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                        />
+                      </AnimatePresence>
+                      
+                      {/* Expand overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                          Click to expand
+                        </div>
+                      </div>
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToTravelPrevious();
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToTravelNext();
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {travelImages.slice(0, 5).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentTravelIndex(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentTravelIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : hobby.title === "Formula 1" ? (
+                    <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
+                      onClick={() => expandImages(f1Images, currentF1Index)}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img 
+                          key={currentF1Index}
+                          src={f1Images[currentF1Index]} 
+                          alt="Formula 1" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                        />
+                      </AnimatePresence>
+                      
+                      {/* Expand overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                          Click to expand
+                        </div>
+                      </div>
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToF1Previous();
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToF1Next();
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {f1Images.slice(0, 5).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentF1Index(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentF1Index 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : hobby.title === "Movies and Shows" ? (
+                    <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
+                      onClick={() => expandImages(tvImages, currentTVIndex)}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img 
+                          key={currentTVIndex}
+                          src={tvImages[currentTVIndex]} 
+                          alt="TV Shows" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                        />
+                      </AnimatePresence>
+                      
+                      {/* Expand overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                          Click to expand
+                        </div>
+                      </div>
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToTVPrevious();
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToTVNext();
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {tvImages.slice(0, 5).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentTVIndex(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentTVIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : hobby.title === "Gym & Fitness" ? (
+                    <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
+                      onClick={() => expandImages(gymImages, currentGymIndex)}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img 
+                          key={currentGymIndex}
+                          src={gymImages[currentGymIndex]} 
+                          alt="Gym" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                        />
+                      </AnimatePresence>
+                      
+                      {/* Expand overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                          Click to expand
+                        </div>
+                      </div>
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToGymPrevious();
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToGymNext();
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {gymImages.slice(0, 5).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentGymIndex(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentGymIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : hobby.title === "Video Games" ? (
+                    <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
+                      onClick={() => expandImages(gamesImages, currentGamesIndex)}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img 
+                          key={currentGamesIndex}
+                          src={gamesImages[currentGamesIndex]} 
+                          alt="Video Games" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                        />
+                      </AnimatePresence>
+                      
+                      {/* Expand overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                          Click to expand
+                        </div>
+                      </div>
+                      
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToGamesPrevious();
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToGamesNext();
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {gamesImages.slice(0, 5).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentGamesIndex(index);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              index === currentGamesIndex 
+                                ? 'bg-white' 
+                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                            }`}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
                 
-                {/* Image placeholder area */}
-                {hobby.title === "Traveling" ? (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
-                    onClick={() => expandImages(travelImages, currentTravelIndex)}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={currentTravelIndex}
-                        src={travelImages[currentTravelIndex]} 
-                        alt="Travel" 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                      />
-                    </AnimatePresence>
-                    
-                    {/* Expand overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
-                        Click to expand
-                      </div>
-                    </div>
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToTravelPrevious();
-                      }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToTravelNext();
-                      }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                    
-                    {/* Image indicators */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {travelImages.slice(0, 5).map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentTravelIndex(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            index === currentTravelIndex 
-                              ? 'bg-white' 
-                              : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                          }`}
-                          aria-label={`Go to image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : hobby.title === "Formula 1" ? (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
-                    onClick={() => expandImages(f1Images, currentF1Index)}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={currentF1Index}
-                        src={f1Images[currentF1Index]} 
-                        alt="Formula 1" 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                      />
-                    </AnimatePresence>
-                    
-                    {/* Expand overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
-                        Click to expand
-                      </div>
-                    </div>
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToF1Previous();
-                      }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToF1Next();
-                      }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                    
-                    {/* Image indicators */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {f1Images.slice(0, 5).map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentF1Index(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            index === currentF1Index 
-                              ? 'bg-white' 
-                              : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                          }`}
-                          aria-label={`Go to image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : hobby.title === "Movies and Shows" ? (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
-                    onClick={() => expandImages(tvImages, currentTVIndex)}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={currentTVIndex}
-                        src={tvImages[currentTVIndex]} 
-                        alt="TV Shows" 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                      />
-                    </AnimatePresence>
-                    
-                    {/* Expand overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
-                        Click to expand
-                      </div>
-                    </div>
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToTVPrevious();
-                      }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToTVNext();
-                      }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                    
-                    {/* Image indicators */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {tvImages.slice(0, 5).map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentTVIndex(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            index === currentTVIndex 
-                              ? 'bg-white' 
-                              : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                          }`}
-                          aria-label={`Go to image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : hobby.title === "Gym & Fitness" ? (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
-                    onClick={() => expandImages(gymImages, currentGymIndex)}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={currentGymIndex}
-                        src={gymImages[currentGymIndex]} 
-                        alt="Gym" 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                      />
-                    </AnimatePresence>
-                    
-                    {/* Expand overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
-                        Click to expand
-                      </div>
-                    </div>
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToGymPrevious();
-                      }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToGymNext();
-                      }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                    
-                    {/* Image indicators */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {gymImages.slice(0, 5).map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentGymIndex(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            index === currentGymIndex 
-                              ? 'bg-white' 
-                              : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                          }`}
-                          aria-label={`Go to image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : hobby.title === "Video Games" ? (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
-                    onClick={() => expandImages(gamesImages, currentGamesIndex)}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.img 
-                        key={currentGamesIndex}
-                        src={gamesImages[currentGamesIndex]} 
-                        alt="Video Games" 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                      />
-                    </AnimatePresence>
-                    
-                    {/* Expand overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
-                        Click to expand
-                      </div>
-                    </div>
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToGamesPrevious();
-                      }}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToGamesNext();
-                      }}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                    
-                    {/* Image indicators */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {gamesImages.slice(0, 5).map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentGamesIndex(index);
-                          }}
-                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                            index === currentGamesIndex 
-                              ? 'bg-white' 
-                              : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                          }`}
-                          aria-label={`Go to image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              
-              {/* Decorative elements */}
-              <div className="absolute top-4 right-4 opacity-30">
-                <Star size={16} style={{ color: 'var(--accent-primary)' }} />
-              </div>
-              <div className="absolute bottom-4 left-4 opacity-30">
-                <Heart size={16} style={{ color: 'var(--accent-primary)' }} />
-              </div>
-            </motion.div>
-          ))}
+                {/* Decorative elements */}
+                <div className="absolute top-4 right-4 opacity-30">
+                  <Star size={16} style={{ color: 'var(--accent-primary)' }} />
+                </div>
+                <div className="absolute bottom-4 left-4 opacity-30">
+                  <Heart size={16} style={{ color: 'var(--accent-primary)' }} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 

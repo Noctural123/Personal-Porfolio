@@ -5,7 +5,7 @@ import { ExternalLink, Github, Calendar } from 'lucide-react';
 import { 
   SiReact, SiTypescript, SiJavascript, SiNodedotjs,
   SiPostgresql, SiMongodb, SiExpress, SiHtml5, SiCss3,
-  SiOpenai, SiAmazonaws, SiPrisma
+  SiOpenai, SiAmazonaws, SiPrisma, SiPython
 } from 'react-icons/si';
 
 const Projects = () => {
@@ -46,6 +46,16 @@ const Projects = () => {
       featured: false
     },
     {
+      title: "YOLOV8 Real Time Object Detection",
+      description: "Implemented a real-time object detection system using YOLOV8. Trained the model on the COCO dataset to improve detection accuracy across 80 different object classes. Used the pre-trained YOLOV8 model for real-time object detection with confidence scoring.",
+      tech: ["Python"],
+      icons: [SiJavascript],
+      github: "https://github.com/Noctural123/Real-time-Object-Detection-YOLOV8-",
+      demo: "#",
+      date: "March 2024",
+      featured: false
+    },
+    {
       title: "Smiles-For-Nursing-Homes",
       description: "Developed a matching algorithm website using JavaScript, HTML, and CSS to connect volunteers with nursing homes based on user criteria. Implemented form validation, data filtering, and dynamic result generation for optimal volunteer-home matching.",
       tech: ["JavaScript", "HTML5", "CSS3"],
@@ -80,7 +90,8 @@ const Projects = () => {
       'CSS3': SiCss3,
       'OpenAI API': SiOpenai,
       'AWS': SiAmazonaws,
-      'Prisma': SiPrisma
+      'Prisma': SiPrisma,
+      'Python': SiPython
     };
     return iconMap[techName] || null;
   };
@@ -99,29 +110,30 @@ const Projects = () => {
         </motion.h2>
 
         <div className="space-y-8">
-          {/* Top row - 3 projects */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.slice(0, 3).map((project, index) => (
-              <motion.div
-                key={project.title}
-                initial={{ opacity: 0, y: 50 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ 
-                  y: -8,
-                  transition: { duration: 0.05, ease: "linear" }
-                }}
-                whileTap={{ 
-                  y: -4,
-                  transition: { duration: 0.1, ease: "easeOut" }
-                }}
-                className="rounded-lg border overflow-hidden"
-                style={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  borderColor: 'var(--border-color)'
-                }}
-              >
-                <div className="p-6">
+          {/* All projects in a consistent grid layout */}
+          <div className="flex justify-center w-full">
+            <div className="projects-grid">
+              {projects.map((project, index) => (
+                <motion.div
+                  key={project.title}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  whileHover={{ 
+                    y: -8,
+                    transition: { duration: 0.05, ease: "linear" }
+                  }}
+                  whileTap={{ 
+                    y: -4,
+                    transition: { duration: 0.1, ease: "easeOut" }
+                  }}
+                  className="project-card rounded-lg border overflow-hidden flex flex-col"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    borderColor: 'var(--border-color)'
+                  }}
+                >
+                <div className="p-6 flex flex-col h-full">
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                       {project.title}
@@ -152,9 +164,23 @@ const Projects = () => {
                         Complete
                       </span>
                     )}
+                    {project.title === "Vietnamese Bau Cua Betting Game" && (
+                      <span className="px-2 py-1 text-xs rounded-full gradient-text border" style={{ 
+                        borderColor: 'var(--accent-primary)'
+                      }}>
+                        Complete
+                      </span>
+                    )}
+                    {project.title === "Smiles-For-Nursing-Homes" && (
+                      <span className="px-2 py-1 text-xs rounded-full gradient-text border" style={{ 
+                        borderColor: 'var(--accent-primary)'
+                      }}>
+                        Complete
+                      </span>
+                    )}
                   </div>
 
-                  <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-sm mb-4 leading-relaxed flex-grow" style={{ color: 'var(--text-secondary)' }}>
                     {project.description}
                   </p>
 
@@ -171,7 +197,7 @@ const Projects = () => {
                         <img 
                           src="/Projects/finscope.png" 
                           alt="Business Finance Dashboard" 
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-48 object-cover rounded-lg"
                         />
                       </motion.div>
                     </div>
@@ -189,125 +215,29 @@ const Projects = () => {
                         <img 
                           src="/Projects/classfinder.png" 
                           alt="OU Class Finder" 
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-48 object-cover rounded-lg"
                         />
                       </motion.div>
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    <Calendar size={14} />
-                    <span>{project.date}</span>
-                  </div>
-
-                  {/* Tech stack */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-medium mb-3" style={{ color: 'var(--text-secondary)' }}>Tech Stack:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech) => {
-                        const IconComponent = getTechIcon(tech);
-                        return (
-                          <span
-                            key={tech}
-                            className="flex items-center gap-1 px-3 py-1 rounded-full text-xs border"
-                            style={{ 
-                              backgroundColor: 'var(--bg-primary)', 
-                              borderColor: 'var(--border-color)',
-                              color: 'var(--text-secondary)'
-                            }}
-                          >
-                            {IconComponent && <IconComponent size={12} style={{ color: 'var(--accent-primary)' }} />}
-                            {tech}
-                          </span>
-                        );
-                      })}
+                  {project.title === "YOLOV8 Real Time Object Detection" && (
+                    <div className="mb-4">
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="cursor-pointer rounded-lg overflow-hidden border"
+                        style={{ borderColor: 'var(--border-color)' }}
+                        onClick={() => window.open('https://github.com/Noctural123/Real-time-Object-Detection-YOLOV8-', '_blank')}
+                      >
+                        <img 
+                          src="/Projects/YOLOV8.png" 
+                          alt="YOLOV8 Real Time Object Detection" 
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      </motion.div>
                     </div>
-                  </div>
-
-                  {/* Project links */}
-                  <div className="flex gap-3">
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
-                        style={{ 
-                          backgroundColor: 'var(--accent-primary)', 
-                          color: 'white' 
-                        }}
-                      >
-                        <Github size={16} />
-                        <span className="text-sm font-medium">Code</span>
-                      </a>
-                    )}
-                    {project.live && (
-                      <a
-                        href={project.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-300"
-                        style={{ 
-                          borderColor: 'var(--border-color)',
-                          color: 'var(--text-primary)'
-                        }}
-                      >
-                        <ExternalLink size={16} />
-                        <span className="text-sm font-medium">Live Demo</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Bottom row - 2 centered projects */}
-          <div className="flex justify-center gap-8">
-            {projects.slice(3).map((project, index) => (
-              <motion.div
-                key={project.title}
-                initial={{ opacity: 0, y: 50 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: (index + 3) * 0.2 }}
-                whileHover={{ 
-                  y: -8,
-                  transition: { duration: 0.05, ease: "linear" }
-                }}
-                whileTap={{ 
-                  y: -4,
-                  transition: { duration: 0.1, ease: "easeOut" }
-                }}
-                className="rounded-lg border overflow-hidden w-full max-w-sm"
-                style={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  borderColor: 'var(--border-color)'
-                }}
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                      {project.title}
-                    </h3>
-                    {project.title === "Vietnamese Bau Cua Betting Game" && (
-                      <span className="px-2 py-1 text-xs rounded-full gradient-text border" style={{ 
-                        borderColor: 'var(--accent-primary)'
-                      }}>
-                        Complete
-                      </span>
-                    )}
-                    {project.title === "Smiles-For-Nursing-Homes" && (
-                      <span className="px-2 py-1 text-xs rounded-full gradient-text border" style={{ 
-                        borderColor: 'var(--accent-primary)'
-                      }}>
-                        Complete
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    {project.description}
-                  </p>
+                  )}
 
                   {project.title === "Vietnamese Bau Cua Betting Game" && (
                     <div className="mb-4">
@@ -321,7 +251,7 @@ const Projects = () => {
                         <img 
                           src="/Projects/bauCua.png" 
                           alt="Vietnamese Bau Cua Betting Game" 
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-48 object-cover rounded-lg"
                         />
                       </motion.div>
                     </div>
@@ -339,7 +269,7 @@ const Projects = () => {
                         <img 
                           src="/Projects/SFNH.png" 
                           alt="Smiles-For-Nursing-Homes" 
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-48 object-cover rounded-lg"
                         />
                       </motion.div>
                     </div>
@@ -375,7 +305,7 @@ const Projects = () => {
                   </div>
 
                   {/* Project links */}
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mt-auto">
                     {project.github && (
                       <a
                         href={project.github}
@@ -411,6 +341,7 @@ const Projects = () => {
               </motion.div>
             ))}
           </div>
+        </div>
         </div>
 
         {/* Call to action */}

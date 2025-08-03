@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Car, Tv, Dumbbell, Gamepad2, Heart, Star, Plane, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react';
+import { Plane, Car, Tv, Dumbbell, Gamepad2, ChevronLeft, ChevronRight, X, Star, Heart } from 'lucide-react';
 
 const Personal = () => {
   const [ref, inView] = useInView({
@@ -14,10 +14,10 @@ const Personal = () => {
   const [currentTVIndex, setCurrentTVIndex] = useState(0);
   const [currentGymIndex, setCurrentGymIndex] = useState(0);
   const [currentGamesIndex, setCurrentGamesIndex] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [expandedImages, setExpandedImages] = useState([]);
+  const [expandedImages, setExpandedImages] = useState(null);
   const [expandedIndex, setExpandedIndex] = useState(0);
-  
+
+  // Image arrays
   const travelImages = [
     '/Travel/Travel1.jpeg',
     '/Travel/Travel2.jpeg',
@@ -63,6 +63,7 @@ const Personal = () => {
     '/Games/Games4.png'
   ];
 
+  // Auto-advance timers
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTravelIndex((prevIndex) => 
@@ -71,7 +72,7 @@ const Personal = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [travelImages.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,7 +82,7 @@ const Personal = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [f1Images.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -91,7 +92,7 @@ const Personal = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [tvImages.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -101,7 +102,7 @@ const Personal = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [gymImages.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -111,7 +112,7 @@ const Personal = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [gamesImages.length]);
 
   const goToTravelPrevious = () => {
     setCurrentTravelIndex((prevIndex) => 
@@ -176,15 +177,10 @@ const Personal = () => {
   const expandImages = (images, startIndex = 0) => {
     setExpandedImages(images);
     setExpandedIndex(startIndex);
-    setIsExpanded(true);
-    // Hide navbar when modal is open
-    document.body.classList.add('modal-open');
   };
 
   const closeExpanded = () => {
-    setIsExpanded(false);
-    // Show navbar when modal is closed
-    document.body.classList.remove('modal-open');
+    setExpandedImages(null);
   };
 
   const goToExpandedPrevious = () => {
@@ -298,15 +294,18 @@ const Personal = () => {
                   <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                     onClick={() => expandImages(travelImages, currentTravelIndex)}
                   >
-                    <motion.img 
-                      key={currentTravelIndex}
-                      src={travelImages[currentTravelIndex]} 
-                      alt="Travel" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentTravelIndex}
+                        src={travelImages[currentTravelIndex]} 
+                        alt="Travel" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                      />
+                    </AnimatePresence>
                     
                     {/* Expand overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
@@ -361,15 +360,18 @@ const Personal = () => {
                   <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                     onClick={() => expandImages(f1Images, currentF1Index)}
                   >
-                    <motion.img 
-                      key={currentF1Index}
-                      src={f1Images[currentF1Index]} 
-                      alt="Formula 1" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentF1Index}
+                        src={f1Images[currentF1Index]} 
+                        alt="Formula 1" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                      />
+                    </AnimatePresence>
                     
                     {/* Expand overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
@@ -403,7 +405,7 @@ const Personal = () => {
                     
                     {/* Image indicators */}
                     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {f1Images.map((_, index) => (
+                      {f1Images.slice(0, 5).map((_, index) => (
                         <button
                           key={index}
                           onClick={(e) => {
@@ -424,15 +426,18 @@ const Personal = () => {
                   <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                     onClick={() => expandImages(tvImages, currentTVIndex)}
                   >
-                    <motion.img 
-                      key={currentTVIndex}
-                      src={tvImages[currentTVIndex]} 
-                      alt="Movies and Shows" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentTVIndex}
+                        src={tvImages[currentTVIndex]} 
+                        alt="TV Shows" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                      />
+                    </AnimatePresence>
                     
                     {/* Expand overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
@@ -466,7 +471,7 @@ const Personal = () => {
                     
                     {/* Image indicators */}
                     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {tvImages.map((_, index) => (
+                      {tvImages.slice(0, 5).map((_, index) => (
                         <button
                           key={index}
                           onClick={(e) => {
@@ -487,15 +492,18 @@ const Personal = () => {
                   <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                     onClick={() => expandImages(gymImages, currentGymIndex)}
                   >
-                    <motion.img 
-                      key={currentGymIndex}
-                      src={gymImages[currentGymIndex]} 
-                      alt="Gym & Fitness" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentGymIndex}
+                        src={gymImages[currentGymIndex]} 
+                        alt="Gym" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                      />
+                    </AnimatePresence>
                     
                     {/* Expand overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
@@ -529,7 +537,7 @@ const Personal = () => {
                     
                     {/* Image indicators */}
                     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {gymImages.map((_, index) => (
+                      {gymImages.slice(0, 5).map((_, index) => (
                         <button
                           key={index}
                           onClick={(e) => {
@@ -550,15 +558,18 @@ const Personal = () => {
                   <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                     onClick={() => expandImages(gamesImages, currentGamesIndex)}
                   >
-                    <motion.img 
-                      key={currentGamesIndex}
-                      src={gamesImages[currentGamesIndex]} 
-                      alt="Video Games" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={currentGamesIndex}
+                        src={gamesImages[currentGamesIndex]} 
+                        alt="Video Games" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                      />
+                    </AnimatePresence>
                     
                     {/* Expand overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
@@ -592,7 +603,7 @@ const Personal = () => {
                     
                     {/* Image indicators */}
                     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {gamesImages.map((_, index) => (
+                      {gamesImages.slice(0, 5).map((_, index) => (
                         <button
                           key={index}
                           onClick={(e) => {
@@ -609,16 +620,7 @@ const Personal = () => {
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center">
-                    <div className="text-center">
-                      <hobby.icon size={40} style={{ color: 'var(--accent-primary)' }} className="mb-2" />
-                      <p className="text-xs opacity-60" style={{ color: 'var(--text-secondary)' }}>
-                        Image placeholder
-                      </p>
-                    </div>
-                  </div>
-                )}
+                ) : null}
               </div>
               
               {/* Decorative elements */}
@@ -631,33 +633,20 @@ const Personal = () => {
             </motion.div>
           ))}
         </div>
+      </div>
 
-        {/* Bottom message */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-12 text-center"
-        >
-          <div className="inline-flex items-center space-x-2 px-6 py-3 rounded-full border bg-black/20 border-white/10 backdrop-blur-sm">
-            <Sparkles size={18} style={{ color: 'var(--accent-primary)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Thank you for visiting my website!
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Expanded Image Modal */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 backdrop-blur-sm p-4"
-              onClick={closeExpanded}
-            >
-              <div className="relative w-full max-w-6xl h-full max-h-[95vh] flex items-center justify-center">
+      {/* Expanded Image Modal */}
+      <AnimatePresence>
+        {expandedImages && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={closeExpanded}
+          >
+            <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
+              <AnimatePresence mode="wait">
                 <motion.img
                   key={expandedIndex}
                   src={expandedImages[expandedIndex]}
@@ -666,50 +655,51 @@ const Personal = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  onClick={(e) => e.stopPropagation()}
                 />
-                
-                {/* Close button */}
-                <button
-                  onClick={closeExpanded}
-                  className="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                  aria-label="Close expanded view"
-                >
-                  <X size={24} />
-                </button>
-                
-                {/* Navigation arrows */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToExpandedPrevious();
-                  }}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToExpandedNext();
-                  }}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={24} />
-                </button>
-                
-                {/* Image counter */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm z-10">
-                  {expandedIndex + 1} / {expandedImages.length}
-                </div>
+              </AnimatePresence>
+              
+              {/* Close button */}
+              <button
+                onClick={closeExpanded}
+                className="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Close expanded view"
+              >
+                <X size={24} />
+              </button>
+              
+              {/* Navigation arrows */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToExpandedPrevious();
+                }}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToExpandedNext();
+                }}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Next image"
+              >
+                <ChevronRight size={24} />
+              </button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm">
+                {expandedIndex + 1} / {expandedImages.length}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

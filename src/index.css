@@ -343,6 +343,68 @@ html {
   }
 }
 
+/* Projects Grid Specific Styles */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.projects-grid .project-card {
+  width: 100%;
+  max-width: 400px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure cards are centered when there are fewer than 3 columns */
+@media (min-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, minmax(350px, 400px));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(350px, 400px));
+  }
+}
+
+@media (max-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+  
+  .projects-grid .project-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-grid {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .projects-grid .project-card {
+    min-height: 550px;
+  }
+}
+
 /* Loading Screen */
 .loading-screen {
   position: fixed;

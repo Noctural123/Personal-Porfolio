@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Award, Users, Heart, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, Award, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const Leadership = () => {
   const [ref, inView] = useInView({
@@ -11,7 +11,10 @@ const Leadership = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentVEYMIndex, setCurrentVEYMIndex] = useState(0);
-  
+  const [expandedImages, setExpandedImages] = useState(null);
+  const [expandedIndex, setExpandedIndex] = useState(0);
+
+  // Image arrays
   const lionDanceImages = [
     '/Lion Dance/LionDance1.jpeg',
     '/Lion Dance/LionDance2.jpeg',
@@ -28,15 +31,16 @@ const Leadership = () => {
     '/VEYM/VEYM5.png'
   ];
 
+  // Auto-advance timers
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         prevIndex === lionDanceImages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000); // Changed from 3000 to 5000ms (5 seconds)
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [lionDanceImages.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,7 +50,7 @@ const Leadership = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [veymImages.length]);
 
   const goToPrevious = () => {
     setCurrentImageIndex((prevIndex) => 
@@ -69,6 +73,27 @@ const Leadership = () => {
   const goToVEYMNext = () => {
     setCurrentVEYMIndex((prevIndex) => 
       prevIndex === veymImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const expandImages = (images, startIndex = 0) => {
+    setExpandedImages(images);
+    setExpandedIndex(startIndex);
+  };
+
+  const closeExpanded = () => {
+    setExpandedImages(null);
+  };
+
+  const goToExpandedPrevious = () => {
+    setExpandedIndex((prevIndex) => 
+      prevIndex === 0 ? expandedImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToExpandedNext = () => {
+    setExpandedIndex((prevIndex) => 
+      prevIndex === expandedImages.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -127,147 +152,209 @@ const Leadership = () => {
                 }}
                 className="group relative lg:w-[30%] w-full"
               >
-                <div className="p-6 rounded-2xl border transition-all duration-500 h-full" style={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  borderColor: 'var(--border-color)',
-                  backdropFilter: 'blur(20px)'
-                }}>
-                  <h3 className="text-xl font-bold mb-2 group-hover:gradient-text transition-all duration-300" style={{ color: 'var(--text-primary)' }}>
-                    {item.title}
-                  </h3>
-                  <p className="text-lg font-semibold mb-1" style={{ color: 'var(--accent-primary)' }}>
-                    {item.role}
-                  </p>
-                  <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                    {item.period}
-                  </p>
-                  <p className="leading-relaxed text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    {item.description}
-                  </p>
+                <div className="p-6 rounded-3xl border-2 h-full"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    borderColor: 'var(--border-color)',
+                    backdropFilter: 'blur(20px)'
+                  }}
+                >
+                  {/* Background gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 opacity-80 rounded-3xl"></div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-3 rounded-2xl bg-purple-900/30 border border-purple-500/40">
+                        <item.icon size={24} style={{ color: 'var(--accent-primary)' }} />
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-bold mb-2 text-white">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm font-medium mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      {item.role}
+                    </p>
+                    <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+                      {item.period}
+                    </p>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Image Card - Right Side (70%) */}
+              {/* Image Gallery - Right Side (70%) */}
               <motion.div
                 whileHover={{ 
                   scale: 1.02, 
                   y: -5,
                   boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
                 }}
-                className="group relative lg:w-[70%] w-full"
+                className="lg:w-[70%] w-full"
               >
-                <div className="p-4 rounded-2xl border transition-all duration-500" style={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  borderColor: 'var(--border-color)',
-                  backdropFilter: 'blur(20px)'
-                }}>
-                  {item.title === "Vietnamese Eucharistic Youth Movement" && (
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      className="rounded-xl overflow-hidden border relative h-[500px] flex items-center justify-center"
-                      style={{ borderColor: 'var(--border-color)' }}
-                    >
-                      <motion.img 
-                        key={currentVEYMIndex}
-                        src={veymImages[currentVEYMIndex]} 
-                        alt="Vietnamese Eucharistic Youth Movement" 
-                        className="w-full h-full object-contain"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                      />
-                      
-                      {/* Navigation Arrows */}
-                      <button
-                        onClick={goToVEYMPrevious}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                        aria-label="Previous image"
-                      >
-                        <ChevronLeft size={24} />
-                      </button>
-                      
-                      <button
-                        onClick={goToVEYMNext}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                        aria-label="Next image"
-                      >
-                        <ChevronRight size={24} />
-                      </button>
-                      
-                      {/* Image indicators */}
-                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                        {veymImages.map((_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setCurrentVEYMIndex(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                              index === currentVEYMIndex 
-                                ? 'bg-white' 
-                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                            }`}
-                            aria-label={`Go to image ${index + 1}`}
-                          />
-                        ))}
-                      </div>
-                    </motion.div>
+                <div className="relative h-[400px] rounded-3xl border-2 overflow-hidden cursor-pointer group"
+                  style={{ 
+                    backgroundColor: 'var(--bg-secondary)', 
+                    borderColor: 'var(--border-color)',
+                    backdropFilter: 'blur(20px)'
+                  }}
+                  onClick={() => expandImages(
+                    item.title === "Lion Dancing" ? lionDanceImages : veymImages,
+                    item.title === "Lion Dancing" ? currentImageIndex : currentVEYMIndex
                   )}
-
-                  {item.title === "Lion Dancing" && (
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      className="rounded-xl overflow-hidden border relative h-[500px] flex items-center justify-center"
-                      style={{ borderColor: 'var(--border-color)' }}
-                    >
-                      <motion.img 
-                        key={currentImageIndex}
-                        src={lionDanceImages[currentImageIndex]} 
-                        alt="Lion Dancing" 
-                        className="w-full h-full object-contain"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
+                >
+                  {/* Background gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-blue-900/20 opacity-80"></div>
+                  
+                  {/* Image */}
+                  <AnimatePresence mode="wait">
+                    <motion.img 
+                      key={item.title === "Lion Dancing" ? currentImageIndex : currentVEYMIndex}
+                      src={item.title === "Lion Dancing" ? lionDanceImages[currentImageIndex] : veymImages[currentVEYMIndex]} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                    />
+                  </AnimatePresence>
+                  
+                  {/* Expand overlay */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-medium">
+                      Click to expand
+                    </div>
+                  </div>
+                  
+                  {/* Navigation Arrows */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (item.title === "Lion Dancing") {
+                        goToPrevious();
+                      } else {
+                        goToVEYMPrevious();
+                      }
+                    }}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (item.title === "Lion Dancing") {
+                        goToNext();
+                      } else {
+                        goToVEYMNext();
+                      }
+                    }}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                  
+                  {/* Image indicators */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    {(item.title === "Lion Dancing" ? lionDanceImages : veymImages).slice(0, 5).map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (item.title === "Lion Dancing") {
+                            setCurrentImageIndex(index);
+                          } else {
+                            setCurrentVEYMIndex(index);
+                          }
+                        }}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === (item.title === "Lion Dancing" ? currentImageIndex : currentVEYMIndex)
+                            ? 'bg-white' 
+                            : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                        }`}
+                        aria-label={`Go to image ${index + 1}`}
                       />
-                      
-                      {/* Navigation Arrows */}
-                      <button
-                        onClick={goToPrevious}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                        aria-label="Previous image"
-                      >
-                        <ChevronLeft size={24} />
-                      </button>
-                      
-                      <button
-                        onClick={goToNext}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
-                        aria-label="Next image"
-                      >
-                        <ChevronRight size={24} />
-                      </button>
-                      
-                      {/* Image indicators */}
-                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                        {lionDanceImages.map((_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setCurrentImageIndex(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                              index === currentImageIndex 
-                                ? 'bg-white' 
-                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                            }`}
-                            aria-label={`Go to image ${index + 1}`}
-                          />
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Expanded Image Modal */}
+      <AnimatePresence>
+        {expandedImages && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={closeExpanded}
+          >
+            <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={expandedIndex}
+                  src={expandedImages[expandedIndex]}
+                  alt="Expanded view"
+                  className="max-w-full max-h-full object-contain rounded-lg"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </AnimatePresence>
+              
+              {/* Close button */}
+              <button
+                onClick={closeExpanded}
+                className="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Close expanded view"
+              >
+                <X size={24} />
+              </button>
+              
+              {/* Navigation arrows */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToExpandedPrevious();
+                }}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToExpandedNext();
+                }}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Next image"
+              >
+                <ChevronRight size={24} />
+              </button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm">
+                {expandedIndex + 1} / {expandedImages.length}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

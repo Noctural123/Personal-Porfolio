@@ -28,7 +28,7 @@ const Projects = () => {
     {
       title: "Business Finance Dashboard",
       description: "Developed a financial analytics dashboard using the MERN stack to visualize complex datasets and trendlines. Implemented a simple regression model to predict yearly revenue.",
-      tech: ["TypeScript", "MongoDB", "Express", "React", "Node.js"],
+      tech: ["React", "TypeScript", "MongoDB", "Express", "Node.js"],
       icons: [SiTypescript, SiMongodb, SiExpress, SiReact, SiNodedotjs],
       github: "https://github.com/Noctural123/finance-dashboard",
       demo: "#",

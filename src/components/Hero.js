@@ -379,7 +379,7 @@ const Hero = () => {
                   <motion.a
                     key={social.label}
                     href={social.href}
-                    target="_blank"
+                    target={social.href.startsWith('mailto:') ? undefined : "_blank"}
                     rel="noopener noreferrer"
                     className="p-3 rounded-lg transition-all duration-300"
                     style={{ 

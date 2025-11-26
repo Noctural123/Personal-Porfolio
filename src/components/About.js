@@ -59,7 +59,7 @@ const About = () => {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-accent-primary mt-1">•</span>
-                  <span><span className="gradient-text font-semibold">3 Years of Internship Experience</span> at Paycom and Tinker Air Force Base</span>
+                  <span><span className="gradient-text font-semibold">3 Years of Internship Experience</span> at Paycom and U.S. Department of Defense</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-accent-primary mt-1">•</span>

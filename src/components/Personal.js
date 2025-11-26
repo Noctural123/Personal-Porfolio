@@ -248,7 +248,7 @@ const Personal = () => {
       icon: Dumbbell
     },
     {
-      title: "Video Games",
+      title: "Games and activities",
       subtitle: "Gaming, Strategy",
       description: "Some of my favorite video games right now are Elden Ring, League of Legends, Teamfight Tactics, and Valorant. Though I don't have much time to play games, I still play them whenever I can.",
       icon: Gamepad2
@@ -600,7 +600,7 @@ const Personal = () => {
                         ))}
                       </div>
                     </div>
-                  ) : hobby.title === "Video Games" ? (
+                  ) : hobby.title === "Games and activities" ? (
                     <div className="w-full h-64 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center relative overflow-hidden cursor-pointer group"
                       onClick={() => expandImages(gamesImages, currentGamesIndex)}
                     >

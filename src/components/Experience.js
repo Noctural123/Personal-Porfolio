@@ -26,7 +26,7 @@ const Experience = () => {
     },
     {
       title: "Software Engineering Intern",
-      company: "Tinker Air Force Base (DoD)",
+      company: "U.S. Department of Defense - Tinker AFB",
       location: "Oklahoma City, OK",
       period: "May 2023 - November 2023",
       description: "Collaborated with PM, UX designers, back-end developers, and security teams to support DoD software systems.",

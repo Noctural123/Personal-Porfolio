@@ -1,6 +1,6 @@
 # Personal Portfolio
 
-My personal portfolio website built with React. Features smooth animations, interactive carousels for my hobbies, and a clean dark theme. Includes sections for my projects, skills, experience, and personal interests.
+My personal portfolio website built with React! 
 
 ## Tech Stack
 

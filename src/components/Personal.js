@@ -232,7 +232,7 @@ const Personal = () => {
     {
       title: "Formula 1",
       subtitle: "Motorsports, Racing",
-      description: "I got into Formula 1 in 2023 and have been a fan ever since. I've yet to go to a race yet unfortunately but am planning on going in the very near future. My favorite drivers are Max Verstappen and Oscar Piastri. (Oscar Piastri for 2025 WDC).",
+      description: "I got into Formula 1 in 2023 and have been a fan ever since. I've yet to go to a race yet unfortunately but am planning on going in the very near future. My favorite drivers are Max Verstappen and Oscar Piastri. (Hopefully Max can pull it back this year).",
       icon: Car
     },
     {

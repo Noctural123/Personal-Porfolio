@@ -17,7 +17,7 @@ const Projects = () => {
   const projects = [
     {
       title: "LeetCode AI Tracker Extension",
-      description: "Full-stack productivity tool with AI code feedback and user-specific recommendations. Built a Chrome extension and interactive dashboard to track LeetCode progress, insights, and personalized notes. Currently developing a recommendation engine to suggest tailored LeetCode problems based on user performance.",
+      description: "Full-stack productivity tool with user-specific recommendations. Built a Chrome extension and interactive dashboard to track LeetCode progress, insights, and personalized notes. Includes a lightweight recommendation engine to suggest tailored LeetCode problems based on user performance.",
       tech: ["Python", "React", "TypeScript", "Node.js", "PostgreSQL", "OpenAI API", "Prisma", "AWS"],
       icons: [SiPython, SiReact, SiTypescript, SiNodedotjs, SiPostgresql, SiOpenai, SiPrisma, SiAmazonaws],
       github: "https://github.com/Noctural123/leetcode-ai-tracker",
@@ -147,7 +147,7 @@ const Projects = () => {
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text'
                       }}>
-                        In Progress
+                        Complete
                       </span>
                     )}
                     {project.title !== "LeetCode AI Tracker Extension" && project.featured && (

@@ -1,30 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, Download, MapPin, Phone, ArrowRight } from 'lucide-react';
+import { Github, Linkedin, Mail, Download, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const roles = [
+  "Software Engineer",
+  "Full-Stack Developer",
+  "Formula 1 Fan",
+  "Lion Dancer",
+  "Problem Solver",
+  "Avid Learner",
+];
 
 const Hero = () => {
   const [currentText, setCurrentText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isResumePreviewOpen, setIsResumePreviewOpen] = useState(false);
   const [particles, setParticles] = useState([]);
   const mousePositionRef = useRef({ x: 0, y: 0 });
-  const canvasRef = useRef(null);
-  const typewriterRef = useRef({
-    currentRoleIndex: 0,
-    charIndex: 0,
-    isDeleting: false,
-    timeoutId: null
-  });
-
-  const roles = [
-    "Software Engineer",
-    "Full-Stack Developer",
-    "Formula 1 Fan",
-    "Lion Dancer",
-    "Problem Solver",
-    "Avid Learner",
-  ];
 
   // Simple typewriter effect
   useEffect(() => {
@@ -328,9 +321,9 @@ const Hero = () => {
               </motion.p>
               
               <div className="flex space-x-4">
-                <motion.a
-                  href="/An Nguyen Resume.pdf"
-                  download
+                <motion.button
+                  type="button"
+                  onClick={() => setIsResumePreviewOpen(true)}
                   className="px-6 py-3 font-semibold rounded-lg transition-all duration-300 flex items-center space-x-2"
                   style={{ 
                     backgroundColor: 'var(--accent-primary)', 
@@ -340,8 +333,8 @@ const Hero = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Download size={20} />
-                  <span>Download CV</span>
-                </motion.a>
+                  <span>Preview Resume</span>
+                </motion.button>
                 
                 <motion.a
                   href="#projects"
@@ -469,6 +462,83 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isResumePreviewOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsResumePreviewOpen(false)}
+          >
+            <motion.div
+              className="w-full max-w-5xl rounded-xl border shadow-2xl overflow-hidden"
+              style={{
+                backgroundColor: 'var(--bg-secondary)',
+                borderColor: 'var(--border-color)'
+              }}
+              initial={{ y: 20, scale: 0.98, opacity: 0 }}
+              animate={{ y: 0, scale: 1, opacity: 1 }}
+              exit={{ y: 20, scale: 0.98, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Resume preview"
+            >
+              <div
+                className="flex items-center justify-between px-5 py-3 border-b"
+                style={{ borderColor: 'var(--border-color)' }}
+              >
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  Resume Preview
+                </h3>
+                <button
+                  type="button"
+                  className="text-sm px-3 py-1 rounded-md border"
+                  style={{ borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                  onClick={() => setIsResumePreviewOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+
+              <div className="h-[70vh] bg-white">
+                <iframe
+                  src="/An Nguyen Resume.pdf#toolbar=1"
+                  title="An Nguyen Resume"
+                  className="w-full h-full border-0"
+                />
+              </div>
+
+              <div
+                className="flex justify-end gap-3 px-5 py-3 border-t"
+                style={{ borderColor: 'var(--border-color)' }}
+              >
+                <a
+                  href="/An Nguyen Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg border text-sm"
+                  style={{ borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                >
+                  Open in New Tab
+                </a>
+                <a
+                  href="/An Nguyen Resume.pdf"
+                  download
+                  className="px-4 py-2 rounded-lg text-sm font-medium"
+                  style={{ backgroundColor: 'var(--accent-primary)', color: 'white' }}
+                >
+                  Download
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

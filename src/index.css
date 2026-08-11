@@ -51,7 +51,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: auto;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -569,6 +569,3 @@ body.modal-open {
   min-height: 100vh;
 }
 
-main {
-  padding-top: 80px; /* Account for fixed navbar height */
-} 

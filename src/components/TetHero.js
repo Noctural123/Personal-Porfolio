@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import HangingLights from './HangingLights';
 import './TetHero.css';
 
 // Tết lion-dance hero, ported from the "Hero 1b" Claude Design comp.
@@ -464,14 +465,12 @@ export default function TetHero() {
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 
+      {/* hanging light-bulb nav */}
+      <HangingLights />
+
       {/* top bar */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', gap: 36, padding: '28px 48px', zIndex: 6 }}>
         <div style={{ font: `700 15px/1 ${MONO}`, color: '#33291D' }}>An H. Nguyen</div>
-        <div style={{ display: 'flex', gap: 22, font: `13px/1 ${MONO}`, letterSpacing: '0.03em' }}>
-          <a href="#about">About</a><span style={{ color: '#9a8c70' }}>·</span>
-          <a href="#personal">Hobbies</a><span style={{ color: '#9a8c70' }}>·</span>
-          <a href="#contact">Contact</a>
-        </div>
         <button
           onClick={togglePlay}
           aria-label={playing ? 'Mute chime sounds' : 'Unmute chime sounds'}
@@ -503,16 +502,6 @@ export default function TetHero() {
           <canvas ref={canvasRef} style={{ position: 'absolute', left: -700, top: -700, width: 'calc(100% + 1400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>
-
-      {/* side destination cards */}
-      <a href="#experience" style={{ position: 'absolute', top: 'min(32vh, calc(100vh - 480px))', left: '6%', zIndex: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, border: '1px solid #8b7a5e', padding: '18px 12px 12px', width: 88, background: 'rgba(255,250,238,0.12)' }}>
-        <span style={{ width: 26, height: 10, border: '1.5px solid #8a2f22', borderRadius: 2, display: 'block' }} />
-        <span style={{ font: `15px/1 ${SERIF}`, color: '#4A3A2C' }}>Experience</span>
-      </a>
-      <a href="#projects" style={{ position: 'absolute', top: 'min(32vh, calc(100vh - 480px))', right: '6%', zIndex: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, border: '1px solid #8b7a5e', padding: '18px 12px 12px', width: 88, background: 'rgba(255,250,238,0.12)' }}>
-        <span style={{ width: 22, height: 12, background: '#8a2f22', borderRadius: '2px 2px 0 0', display: 'block' }} />
-        <span style={{ font: `15px/1 ${SERIF}`, color: '#4A3A2C' }}>Projects</span>
-      </a>
 
       {/* left headline — top-anchored so it stays in the first viewport now
           that the section extends past 100vh for the beard */}

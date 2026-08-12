@@ -481,21 +481,23 @@ export default function TetHero() {
       <div style={{ position: 'absolute', top: '44vh', left: '50%', width: 300, height: '56vh', transform: 'skewX(-22deg) translateX(150px)', background: 'linear-gradient(160deg, rgba(70,52,28,0.14), rgba(70,52,28,0) 72%)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* lion head + live beard */}
-      <div style={{ position: 'absolute', top: '7vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
+      <div style={{ position: 'absolute', top: '2vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
         {lionImgOk ? (
           <img
-            src={`${process.env.PUBLIC_URL}/lion-head.png`}
-            alt="Golden temple roof"
+            src={`${process.env.PUBLIC_URL}/lion_head_test_1.png`}
+            alt="Lion dance head"
             onError={() => setLionImgOk(false)}
             draggable={false}
-            style={{ width: 800, height: 'min(300px, 34vh)', objectFit: 'contain' }}
+            style={{ width: 900, height: 'min(940px, 84vh)', objectFit: 'contain', position: 'relative', zIndex: 2 }}
           />
         ) : (
-          <div style={{ width: 800, height: 'min(300px, 34vh)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #8b7a5e', color: '#6b5c44', font: `13px/1.5 ${MONO}`, textAlign: 'center', padding: 16, boxSizing: 'border-box' }}>
-            hero photo — add public/lion-head.png (transparent png looks best)
+          <div style={{ width: 900, height: 'min(940px, 84vh)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #8b7a5e', color: '#6b5c44', font: `13px/1.5 ${MONO}`, textAlign: 'center', padding: 16, boxSizing: 'border-box' }}>
+            hero photo — add public/lion_head_test_1.png (transparent png looks best)
           </div>
         )}
-        <div style={{ position: 'relative', width: 620, height: '62vh', marginTop: -6, overflow: 'visible' }}>
+        {/* chime curtain = the lion's beard: only as wide as the chin tuft,
+            tucked up behind the fur so strands emerge from under the beard */}
+        <div style={{ position: 'relative', width: 210, height: '32vh', marginTop: -160, zIndex: 1, overflow: 'visible' }}>
           <canvas ref={canvasRef} style={{ position: 'absolute', left: -260, top: -260, width: 'calc(100% + 520px)', height: 'calc(100% + 520px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>

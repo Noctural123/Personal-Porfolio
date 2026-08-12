@@ -10,6 +10,9 @@ const CONTENT =
 const COLOR = '#1c1a16';
 const GRAVITY = 0.22;
 const INTERACTION_STRENGTH = 0.6;
+const DAMPING = 0.88; // heavier velocity damping so disturbances settle instead of ringing
+const MAX_SPEED = 4; // clamp per-frame velocity so a disturbance can't build into a big swing
+const SOLVE_ITERS = 8; // more constraint iterations = firmer, less loose/wavy cloth
 const VOLUME = 0.5;
 const FONT_SIZE = 11;
 const LETTER_SPACING = 1;
@@ -132,19 +135,19 @@ export default function TetHero() {
         const dead = y >= colLen[x];
         particles.push({ x: px, y: py, px, py, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
         if (!dead) {
-          if (x > 0 && y < colLen[x - 1]) constraints.push({ a: idx - 1, b: idx, min: sX * 0.6, max: sX * 4 });
-          if (y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.02, max: sY * 1.1 });
+          if (x > 0 && y < colLen[x - 1]) constraints.push({ a: idx - 1, b: idx, min: sX * 0.6, max: sX * 1.6 });
+          if (y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.3, max: sY * 1.1 });
         }
       }
       const steps = particles.length > 2600 ? 60 : particles.length > 1400 ? 72 : 90;
       for (let s = 0; s < steps; s++) {
         for (const p of particles) {
           if (p.pinned) continue;
-          const vx = (p.x - p.px) * 0.99, vy = (p.y - p.py) * 0.99;
+          const vx = (p.x - p.px) * DAMPING, vy = (p.y - p.py) * DAMPING;
           p.px = p.x; p.py = p.y;
           p.x += vx; p.y += vy + GRAVITY;
         }
-        for (let n = 0; n < 5; n++) solve(constraints, particles);
+        for (let n = 0; n < SOLVE_ITERS; n++) solve(constraints, particles);
       }
       for (const p of particles) { p.px = p.x; p.py = p.y; }
       phys.particles = particles; phys.constraints = constraints;
@@ -258,7 +261,7 @@ export default function TetHero() {
     const applyPointer = (x, y) => {
       // brush, not repulsion: letters near the cursor are dragged slightly
       // along the direction of mouse travel, and the cloth carries it outward
-      const size = 8e3, k = 0.5 * INTERACTION_STRENGTH;
+      const size = 8e3, k = 0.25 * INTERACTION_STRENGTH;
       for (const p of phys.particles) {
         if (p.pinned) continue;
         const dx = x - p.x, dy = y - p.y;
@@ -330,13 +333,15 @@ export default function TetHero() {
       if (!ps.length) return;
       for (const p of ps) {
         if (p.pinned) continue;
-        const vx = (p.x - p.px) * 0.99, vy = (p.y - p.py) * 0.99;
+        let vx = (p.x - p.px) * DAMPING, vy = (p.y - p.py) * DAMPING;
+        const speed = Math.hypot(vx, vy);
+        if (speed > MAX_SPEED) { const k = MAX_SPEED / speed; vx *= k; vy *= k; }
         p.px = p.x; p.py = p.y;
         p.x += vx; p.y += vy + GRAVITY;
       }
-      for (let n = 0; n < 5; n++) solve(phys.constraints, ps);
+      for (let n = 0; n < SOLVE_ITERS; n++) solve(phys.constraints, ps);
       if (pointer.active) applyPointer(pointer.x, pointer.y);
-      pointer.dx *= 0.55; pointer.dy *= 0.55;
+      pointer.dx *= 0.4; pointer.dy *= 0.4;
       if (pointer.dragging >= 0) {
         const p = ps[pointer.dragging];
         p.x = pointer.x; p.y = pointer.y; p.px = pointer.x; p.py = pointer.y;

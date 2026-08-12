@@ -66,7 +66,9 @@ export default function TetChimes() {
         for (let i = 0; i < count; i++) {
           const x = anchor.x + (Math.random() - 0.5) * 4;
           const y = anchor.y + i * seg;
-          points.push({ x, y, px: x, py: y });
+          // rx/ry: resting position this point springs back toward, like the
+          // reference chimes snapping home instead of drifting/oscillating
+          points.push({ x, y, px: x, py: y, rx: anchor.x, ry: y });
         }
         const tile = seg * 0.82;
         return { phrase, cells, points, seg, tile, anchor, u, font, fontSize, phase: r * 1.7 };
@@ -98,32 +100,45 @@ export default function TetChimes() {
 
     function update() {
       const gravity = 0.45;
+      const damping = 0.85; // heavier velocity damping so swings settle instead of lingering
+      const maxSpeed = 3.2; // clamp per-frame velocity so disturbances can't build into big swings
       for (const s of strands) {
         const wind =
-          Math.sin(time * 0.0006 + s.phase) * 0.05 +
-          Math.sin(time * 0.0017 + s.phase * 2.3) * 0.028;
+          Math.sin(time * 0.0006 + s.phase) * 0.012 +
+          Math.sin(time * 0.0017 + s.phase * 2.3) * 0.006;
 
         for (let i = 1; i < s.points.length; i++) {
           const p = s.points[i];
-          const vx = (p.x - p.px) * 0.986;
-          const vy = (p.y - p.py) * 0.986;
+          let vx = (p.x - p.px) * damping;
+          let vy = (p.y - p.py) * damping;
+          const speed = Math.hypot(vx, vy);
+          if (speed > maxSpeed) {
+            const k = maxSpeed / speed;
+            vx *= k;
+            vy *= k;
+          }
           p.px = p.x;
           p.py = p.y;
-          p.x += vx + wind * (i / s.points.length) * 6;
+          p.x += vx + wind * (i / s.points.length) * 1.5;
           p.y += vy + gravity;
 
           // pointer knocks the chimes
           const mdx = p.x - mouse.x;
           const mdy = p.y - mouse.y;
           const md = Math.hypot(mdx, mdy);
-          if (md < 90) {
-            const fall = 1 - md / 90;
-            p.x += clamp(mouse.dx, -22, 22) * 0.3 * fall;
-            p.y += clamp(mouse.dy, -22, 22) * 0.12 * fall;
+          if (md < 55) {
+            const fall = 1 - md / 55;
+            p.x += clamp(mouse.dx, -22, 22) * 0.1 * fall;
+            p.y += clamp(mouse.dy, -22, 22) * 0.045 * fall;
           }
+
+          // spring back toward the resting hang line, like the reference chimes
+          // snapping home instead of drifting or riding out long oscillations
+          p.x += (p.rx - p.x) * 0.03;
+          p.y += (p.ry - p.y) * 0.012;
         }
 
-        for (let iter = 0; iter < 6; iter++) {
+        for (let iter = 0; iter < 10; iter++) {
           s.points[0].x = s.anchor.x;
           s.points[0].y = s.anchor.y;
           if (drag && drag.strand === s) {
@@ -131,11 +146,11 @@ export default function TetChimes() {
             drag.point.y = mouse.y;
           }
           constrain(s, 1, 1);
-          constrain(s, 2, 0.25); // slight stiffness so strands hang like rods, not spaghetti
+          constrain(s, 2, 0.5); // more stiffness so strands hang like rods, not spaghetti
         }
       }
-      mouse.dx *= 0.6;
-      mouse.dy *= 0.6;
+      mouse.dx *= 0.5;
+      mouse.dy *= 0.5;
     }
 
     function constrain(s, gap, strength) {

@@ -38,7 +38,9 @@ export default function TetHero() {
   }, [playing]);
 
   useEffect(() => {
-    const BLEED = 260;
+    // canvas bleed around the beard box — big enough that strands dragged or
+    // flung anywhere in the hero never hit the canvas edge and get cut off
+    const BLEED = 700;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -484,7 +486,7 @@ export default function TetHero() {
       <div style={{ position: 'absolute', top: '2vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
         {lionImgOk ? (
           <img
-            src={`${process.env.PUBLIC_URL}/lion_head_test_1.png`}
+            src={`${process.env.PUBLIC_URL}/lion_head_no_beard.png`}
             alt="Lion dance head"
             onError={() => setLionImgOk(false)}
             draggable={false}
@@ -495,10 +497,10 @@ export default function TetHero() {
             hero photo — add public/lion_head_test_1.png (transparent png looks best)
           </div>
         )}
-        {/* chime curtain = the lion's beard: only as wide as the chin tuft,
-            tucked up behind the fur so strands emerge from under the beard */}
-        <div style={{ position: 'relative', width: 210, height: '32vh', marginTop: -160, zIndex: 1, overflow: 'visible' }}>
-          <canvas ref={canvasRef} style={{ position: 'absolute', left: -260, top: -260, width: 'calc(100% + 520px)', height: 'calc(100% + 520px)', display: 'block', pointerEvents: 'none' }} />
+        {/* chime curtain IS the lion's beard now (image has none): as wide as
+            the chin, tucked up behind the jaw fur so strands grow from it */}
+        <div style={{ position: 'relative', width: 240, height: '34vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
+          <canvas ref={canvasRef} style={{ position: 'absolute', left: -700, top: -700, width: 'calc(100% + 1400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>
 

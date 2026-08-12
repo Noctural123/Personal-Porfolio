@@ -8,12 +8,15 @@ import './TetHero.css';
 const CONTENT =
   'chúc mừng năm mới, vạn sự như ý, tiền vô như nước, sức khỏe dồi dào, sống lâu trăm tuổi, phát tài, múa lân';
 const COLOR = '#1c1a16';
-const GRAVITY = 0.22;
-const INTERACTION_STRENGTH = 0.6;
-const DAMPING = 0.88; // heavier velocity damping so disturbances settle instead of ringing
-const MAX_SPEED = 4; // clamp per-frame velocity so a disturbance can't build into a big swing
-const SOLVE_ITERS = 8; // more constraint iterations = firmer, less loose/wavy cloth
-const STRAND_SPRING = 0.025; // pull toward resting line — keeps independent strands from drifting
+// physics ported from the original chimes (marinabudarina.github.io/chimes):
+// low friction + slack spacer links between strands is what makes them part
+// and fall back together fluidly instead of swinging alone or moving as a sheet
+const GRAVITY = 0.2;
+const DAMPING = 0.99;
+const SOLVE_ITERS = 5;
+const MOUSE_SIZE = 5000; // squared px — cursor field reach (~71px radius)
+const MOUSE_STRENGTH = 4; // strength of the radial push away from the cursor
+const GRAB_RADIUS = 70; // px — click grabs every strand point within this reach of the cursor
 const VOLUME = 0.5;
 const FONT_SIZE = 11;
 const LETTER_SPACING = 1;
@@ -47,7 +50,7 @@ export default function TetHero() {
       return t * t * (3 - 2 * t);
     };
     const phys = { particles: [], constraints: [], cols: 0, rows: 0, width: 0, height: 0 };
-    const pointer = { active: false, x: 0, y: 0, dx: 0, dy: 0, dragging: -1, dragWasPinned: false, pointerId: -1 };
+    const pointer = { active: false, down: false, moved: false, x: 0, y: 0, dx: 0, dy: 0, grabbed: [], pointerId: -1 };
 
     const atlas = new Map();
     let advance = 8, glyphH = 14, glyphW = 12, glyphHL = 14, baseline = 9, leftPad = 1;
@@ -124,20 +127,26 @@ export default function TetHero() {
       const seeded = (i) => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
       const colLen = [];
       for (let x = 0; x < cols; x++) {
-        // near-full columns: each column is an independent hanging strand
-        // (like a beard lock), with a slightly ragged bottom edge
-        const shape = 0.97;
-        const jag = (seeded(x) - 0.5) * 0.06 + (seeded(x * 3 + 7) - 0.5) * 0.03;
-        colLen.push(Math.max(5, Math.round(rows * Math.max(0.88, Math.min(1, shape + jag)))));
+        // each column is an independent hanging strand (like a beard lock),
+        // ending well above the fold with a ragged edge so the bottoms
+        // visibly dangle in the air instead of running off the page
+        const shape = 0.78;
+        const jag = (seeded(x) - 0.5) * 0.2 + (seeded(x * 3 + 7) - 0.5) * 0.1;
+        colLen.push(Math.max(5, Math.round(rows * Math.max(0.55, Math.min(0.95, shape + jag)))));
       }
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
         const idx = y * cols + x;
         const px = BLEED + x * sX, py = BLEED + y * sY;
         const dead = y >= colLen[x];
-        // restX: the vertical line this strand springs back toward — no
-        // horizontal constraints between columns, so strands swing independently
-        particles.push({ x: px, y: py, px, py, restX: px, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
-        if (!dead && y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.3, max: sY * 1.1 });
+        particles.push({ x: px, y: py, px, py, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
+        if (!dead) {
+          // strand chain: very loose compression so links fold past each other
+          if (y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.02, max: sY * 1.1 });
+          // slack spacer between neighbors: engages only when strands crowd
+          // (< 0.6x) or tear apart (> 4x), so they fall together fluidly
+          // without acting like a woven sheet
+          if (x > 0 && y < colLen[x - 1]) constraints.push({ a: idx - 1, b: idx, min: sX * 0.6, max: sX * 4 });
+        }
       }
       const steps = particles.length > 2600 ? 60 : particles.length > 1400 ? 72 : 90;
       for (let s = 0; s < steps; s++) {
@@ -152,6 +161,7 @@ export default function TetHero() {
       for (const p of particles) { p.px = p.x; p.py = p.y; }
       phys.particles = particles; phys.constraints = constraints;
       phys.cols = cols; phys.rows = rows;
+      phys.sX = sX; phys.sY = sY;
       phys.width = width + BLEED * 2; phys.height = height + BLEED * 2;
     };
 
@@ -244,7 +254,7 @@ export default function TetHero() {
     };
 
     const pointerField = (x, y) => {
-      const size = 8e3, str = 4 * INTERACTION_STRENGTH;
+      const size = 8e3, str = MOUSE_STRENGTH;
       let maxS = 0, maxI = -1, maxD2 = Infinity;
       const ps = phys.particles;
       for (let i = 0; i < ps.length; i++) {
@@ -258,23 +268,25 @@ export default function TetHero() {
       disturbedIdx = maxI; disturbedDist = Math.sqrt(maxD2);
       return maxS;
     };
-    const applyPointer = (x, y) => {
-      // brush, not repulsion: letters near the cursor are dragged slightly
-      // along the direction of mouse travel, and the cloth carries it outward
-      const size = 8e3, k = 0.25 * INTERACTION_STRENGTH;
+    const applyPointer = (x, y, dd) => {
+      // the original chimes' interaction: a smooth radial field that pushes
+      // letters away from the cursor, scaled by the frame's real dt² exactly
+      // like the original's force integration — so the push strength is the
+      // same at 60Hz and 144Hz, and constraints absorb it in the same frame
       for (const p of phys.particles) {
         if (p.pinned) continue;
-        const dx = x - p.x, dy = y - p.y;
+        const dx = p.x - x, dy = p.y - y;
         const d2 = dx * dx + dy * dy;
-        if (d2 >= size) continue;
-        const fall = smoothstep(size, 0, d2);
-        const ox = pointer.dx * k * fall, oy = pointer.dy * k * fall * 0.5;
-        p.x += ox; p.y += oy;
+        if (d2 >= MOUSE_SIZE) continue;
+        const d = Math.sqrt(d2) || 1e-4;
+        const k = (smoothstep(MOUSE_SIZE, -2000, d2) * MOUSE_STRENGTH / 300) * dd;
+        p.x += (dx / d) * k;
+        p.y += (dy / d) * k;
       }
     };
     const local = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
     const nearest = (x, y) => {
-      let best = -1, bd = 400;
+      let best = -1, bd = 2500; // ~50px pickup radius so grabbing a string is easy
       const ps = phys.particles;
       for (let i = 0; i < ps.length; i++) {
         if (ps[i].dead) continue;
@@ -284,17 +296,29 @@ export default function TetHero() {
       return best;
     };
     const onDown = (e) => {
+      // click closes a fist around the beard: every strand point within
+      // GRAB_RADIUS is caught and carried with the cursor, keeping its
+      // offset so the handful holds its shape; everything else hangs free
       const pt = local(e);
       pointer.x = pt.x; pointer.y = pt.y; pointer.pointerId = e.pointerId;
-      const hit = nearest(pt.x, pt.y);
-      if (hit >= 0) {
+      pointer.down = true;
+      const r2 = GRAB_RADIUS * GRAB_RADIUS;
+      const grabbed = [];
+      const ps = phys.particles;
+      for (let i = 0; i < ps.length; i++) {
+        const p = ps[i];
+        if (p.pinned || p.dead) continue; // never grab anchors
+        const dx = p.x - pt.x, dy = p.y - pt.y;
+        if (dx * dx + dy * dy > r2) continue;
+        p.pinned = true;
+        grabbed.push({ p, ox: dx, oy: dy });
+      }
+      pointer.grabbed = grabbed;
+      if (grabbed.length) {
         ensureAudio(true);
         pointer.active = true;
-        pointer.dragging = hit;
-        const p = phys.particles[hit];
-        pointer.dragWasPinned = p.basePinned;
-        p.pinned = true; p.x = pt.x; p.y = pt.y; p.px = pt.x; p.py = pt.y;
-        strike(1, true, hit, 0);
+        const hit = nearest(pt.x, pt.y);
+        if (hit >= 0) strike(1, true, hit, 0);
       }
     };
     const onMove = (e) => {
@@ -304,23 +328,30 @@ export default function TetHero() {
         pointer.dy = Math.max(-24, Math.min(24, pt.y - lastPos.y));
       }
       lastPos.x = pt.x; lastPos.y = pt.y; lastPos.has = true;
-      pointer.x = pt.x; pointer.y = pt.y; pointer.active = true;
+      pointer.x = pt.x; pointer.y = pt.y; pointer.active = true; pointer.moved = true;
       const dist = pointerField(pt.x, pt.y);
-      const active = pointer.dragging >= 0 ? pointer.dragging : disturbedIdx;
+      const active = disturbedIdx;
       if (lastHover >= 0 && (active !== lastHover || disturbedDist > 55)) armed[lastHover] = true;
-      if (active >= 0 && disturbedDist <= 55) { lastHover = active; strike(dist, pointer.dragging >= 0, active, disturbedDist); }
+      if (active >= 0 && disturbedDist <= 55) { lastHover = active; strike(dist, pointer.grabbed.length > 0, active, disturbedDist); }
       else lastHover = -1;
-      if (pointer.dragging >= 0) {
-        const p = phys.particles[pointer.dragging];
-        p.pinned = true; p.x = pt.x; p.y = pt.y; p.px = pt.x; p.py = pt.y;
+      for (const g of pointer.grabbed) {
+        g.p.x = pt.x + g.ox; g.p.y = pt.y + g.oy;
+        g.p.px = g.p.x; g.p.py = g.p.y;
       }
     };
     const onUp = (e) => {
-      if (pointer.pointerId === e.pointerId && pointer.dragging >= 0) {
-        const p = phys.particles[pointer.dragging];
-        p.pinned = pointer.dragWasPinned; p.basePinned = pointer.dragWasPinned;
+      if (pointer.pointerId === e.pointerId) {
+        // open the fist: released points unpin and inherit the cursor's
+        // recent velocity, so a flick throws the handful
+        for (const g of pointer.grabbed) {
+          g.p.pinned = false;
+          g.p.px = g.p.x - pointer.dx;
+          g.p.py = g.p.y - pointer.dy;
+        }
+        pointer.grabbed = [];
+        pointer.pointerId = -1;
       }
-      pointer.dragging = -1; pointer.pointerId = -1; pointer.dragWasPinned = false;
+      pointer.down = false;
       pointer.active = false;
     };
     window.addEventListener('pointerdown', onDown);
@@ -328,29 +359,27 @@ export default function TetHero() {
     window.addEventListener('pointerup', onUp);
     window.addEventListener('pointercancel', onUp);
 
-    const step = () => {
+    const step = (dd) => {
       const ps = phys.particles;
       if (!ps.length) return;
       for (const p of ps) {
         if (p.pinned) continue;
-        let vx = (p.x - p.px) * DAMPING, vy = (p.y - p.py) * DAMPING;
-        const speed = Math.hypot(vx, vy);
-        if (speed > MAX_SPEED) { const k = MAX_SPEED / speed; vx *= k; vy *= k; }
+        const vx = (p.x - p.px) * DAMPING, vy = (p.y - p.py) * DAMPING;
         p.px = p.x; p.py = p.y;
         p.x += vx; p.y += vy + GRAVITY;
       }
+      // mouse field goes in BEFORE the constraint solve (same order as the
+      // original) so the chains absorb the push within the frame instead of
+      // it plowing letters ahead of the cursor as raw velocity. It only fires
+      // on frames where the cursor actually moved; while a handful is grabbed
+      // the pins do the work, so skip it.
+      if (pointer.moved && !pointer.grabbed.length) applyPointer(pointer.x, pointer.y, dd);
+      pointer.moved = false;
       for (let n = 0; n < SOLVE_ITERS; n++) solve(phys.constraints, ps);
-      // each strand hangs on its own — spring it back toward its resting
-      // vertical line so it doesn't drift now that columns aren't linked
-      for (const p of ps) {
-        if (p.pinned) continue;
-        p.x += (p.restX - p.x) * STRAND_SPRING;
-      }
-      if (pointer.active) applyPointer(pointer.x, pointer.y);
       pointer.dx *= 0.4; pointer.dy *= 0.4;
-      if (pointer.dragging >= 0) {
-        const p = ps[pointer.dragging];
-        p.x = pointer.x; p.y = pointer.y; p.px = pointer.x; p.py = pointer.y;
+      for (const g of pointer.grabbed) {
+        g.p.x = pointer.x + g.ox; g.p.y = pointer.y + g.oy;
+        g.p.px = g.p.x; g.p.py = g.p.y;
       }
     };
     const draw = () => {
@@ -379,9 +408,14 @@ export default function TetHero() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     let raf = 0;
-    const loop = () => {
+    let lastT = 0;
+    const loop = (now) => {
       raf = requestAnimationFrame(loop);
-      try { step(); draw(); } catch (err) { console.error('chimes loop error', err); cancelAnimationFrame(raf); }
+      // real frame delta, clamped like the original (1..32ms) — dt² feeds the
+      // mouse-field strength so it's refresh-rate independent
+      const dt = Math.min(32, Math.max(1, now - (lastT || now - 16)));
+      lastT = now;
+      try { step(dt * dt); draw(); } catch (err) { console.error('chimes loop error', err); cancelAnimationFrame(raf); }
     };
     try { build(); draw(); } catch (err) { console.error('chimes build error', err); }
     raf = requestAnimationFrame(loop);

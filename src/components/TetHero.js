@@ -314,11 +314,24 @@ export default function TetHero() {
         grabbed.push({ p, ox: dx, oy: dy });
       }
       pointer.grabbed = grabbed;
-      if (grabbed.length) {
+      // a bare click plucks: an outward burst around the cursor so the
+      // chimes visibly ring on click even without dragging (grabbed points
+      // are pinned, so only the surrounding strands take the kick)
+      for (const p of ps) {
+        if (p.pinned) continue;
+        const dx = p.x - pt.x, dy = p.y - pt.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 >= MOUSE_SIZE) continue;
+        const d = Math.sqrt(d2) || 1e-4;
+        const k = smoothstep(MOUSE_SIZE, -2000, d2) * 5;
+        p.x += (dx / d) * k;
+        p.y += (dy / d) * k;
+      }
+      const hit = nearest(pt.x, pt.y);
+      if (hit >= 0) {
         ensureAudio(true);
         pointer.active = true;
-        const hit = nearest(pt.x, pt.y);
-        if (hit >= 0) strike(1, true, hit, 0);
+        strike(1, true, hit, 0);
       }
     };
     const onMove = (e) => {
@@ -444,7 +457,7 @@ export default function TetHero() {
   };
 
   return (
-    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '100vh', background: `#E0D3BC url(${process.env.PUBLIC_URL}/paper.png) repeat`, overflow: 'hidden' }}>
+    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '100vh', background: `#E0D3BC url(${process.env.PUBLIC_URL}/paper.png) repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 
@@ -474,6 +487,7 @@ export default function TetHero() {
             src={`${process.env.PUBLIC_URL}/lion-head.png`}
             alt="Golden temple roof"
             onError={() => setLionImgOk(false)}
+            draggable={false}
             style={{ width: 800, height: 'min(300px, 34vh)', objectFit: 'contain' }}
           />
         ) : (

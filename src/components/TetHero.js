@@ -460,7 +460,7 @@ export default function TetHero() {
   };
 
   return (
-    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '130vh', background: `#E0D3BC url(${process.env.PUBLIC_URL}/paper.png) repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
+    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '130vh', background: `#C9B896 url(${process.env.PUBLIC_URL}/new_bg.png) center / cover no-repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 

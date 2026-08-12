@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 import './TetHero.css';
 
 // Tết lion-dance hero, ported from the "Hero 1b" Claude Design comp.
@@ -473,14 +474,13 @@ export default function TetHero() {
         </div>
         <button
           onClick={togglePlay}
-          style={{ marginLeft: 'auto', background: '#4A3A2C', color: '#E8DCC4', border: 'none', cursor: 'pointer', font: `500 16px/1 ${SERIF}`, padding: '10px 28px', borderRadius: 6, boxShadow: '0 2px 6px rgba(50,35,15,0.3)' }}
+          aria-label={playing ? 'Mute chime sounds' : 'Unmute chime sounds'}
+          title={playing ? 'Sound on' : 'Sound off'}
+          style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#4A3A2C', color: '#E8DCC4', border: 'none', cursor: 'pointer', width: 42, height: 42, borderRadius: 6, boxShadow: '0 2px 6px rgba(50,35,15,0.3)' }}
         >
-          {playing ? 'Pause' : 'Play'}
+          {playing ? <Volume2 size={20} /> : <VolumeX size={20} />}
         </button>
       </div>
-
-      {/* soft cast shadow */}
-      <div style={{ position: 'absolute', top: '44vh', left: '50%', width: 300, height: '56vh', transform: 'skewX(-22deg) translateX(150px)', background: 'linear-gradient(160deg, rgba(70,52,28,0.14), rgba(70,52,28,0) 72%)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* lion head + live beard */}
       <div style={{ position: 'absolute', top: '2vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>

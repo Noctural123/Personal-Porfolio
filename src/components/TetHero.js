@@ -459,7 +459,7 @@ export default function TetHero() {
   };
 
   return (
-    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '100vh', background: `#E0D3BC url(${process.env.PUBLIC_URL}/paper.png) repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
+    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '130vh', background: `#E0D3BC url(${process.env.PUBLIC_URL}/paper.png) repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 
@@ -499,7 +499,7 @@ export default function TetHero() {
         )}
         {/* chime curtain IS the lion's beard now (image has none): as wide as
             the chin, tucked up behind the jaw fur so strands grow from it */}
-        <div style={{ position: 'relative', width: 240, height: '34vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
+        <div style={{ position: 'relative', width: 240, height: '50vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
           <canvas ref={canvasRef} style={{ position: 'absolute', left: -700, top: -700, width: 'calc(100% + 1400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>
@@ -514,8 +514,9 @@ export default function TetHero() {
         <span style={{ font: `15px/1 ${SERIF}`, color: '#4A3A2C' }}>Projects</span>
       </a>
 
-      {/* left headline */}
-      <div style={{ position: 'absolute', left: '5%', bottom: '7vh', width: 400, zIndex: 6 }}>
+      {/* left headline — top-anchored so it stays in the first viewport now
+          that the section extends past 100vh for the beard */}
+      <div style={{ position: 'absolute', left: '5%', top: '64vh', width: 400, zIndex: 6 }}>
         <div style={{ font: `13px/1.4 ${MONO}`, color: '#6b5c44', marginBottom: 20 }}>
           <span style={{ color: '#4A3A2C', fontWeight: 700 }}>Duyên</span> A chance encounter
         </div>
@@ -524,8 +525,8 @@ export default function TetHero() {
         </h1>
       </div>
 
-      {/* bottom-right blurb */}
-      <div style={{ position: 'absolute', right: '6%', bottom: '9vh', width: 270, zIndex: 6 }}>
+      {/* bottom-right blurb — top-anchored to stay in the first viewport */}
+      <div style={{ position: 'absolute', right: '6%', top: '79vh', width: 270, zIndex: 6 }}>
         <div style={{ font: `13px/1.8 ${MONO}`, color: '#5a4c38' }}>
           Drift through projects, odd experiments, and everything I build between lion dance seasons.
         </div>

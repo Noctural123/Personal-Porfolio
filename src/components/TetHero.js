@@ -7,7 +7,7 @@ import './TetHero.css';
 
 const CONTENT =
   'chúc mừng năm mới, vạn sự như ý, tiền vô như nước, sức khỏe dồi dào, sống lâu trăm tuổi, phát tài, múa lân';
-const COLOR = '#1c1a16';
+const COLOR = '#0b0a08';
 // physics ported from the original chimes (marinabudarina.github.io/chimes):
 // low friction + slack spacer links between strands is what makes them part
 // and fall back together fluidly instead of swinging alone or moving as a sheet
@@ -55,7 +55,7 @@ export default function TetHero() {
     const atlas = new Map();
     let advance = 8, glyphH = 14, glyphW = 12, glyphHL = 14, baseline = 9, leftPad = 1;
     let atlasBuilt = false;
-    const FONT = (px) => `400 ${px}px 'Courier New', Courier, monospace`;
+    const FONT = (px) => `700 ${px}px 'Courier New', Courier, monospace`;
     const buildAtlas = () => {
       if (atlasBuilt) return;
       atlasBuilt = true;

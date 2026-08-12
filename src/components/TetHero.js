@@ -13,6 +13,7 @@ const INTERACTION_STRENGTH = 0.6;
 const DAMPING = 0.88; // heavier velocity damping so disturbances settle instead of ringing
 const MAX_SPEED = 4; // clamp per-frame velocity so a disturbance can't build into a big swing
 const SOLVE_ITERS = 8; // more constraint iterations = firmer, less loose/wavy cloth
+const STRAND_SPRING = 0.025; // pull toward resting line — keeps independent strands from drifting
 const VOLUME = 0.5;
 const FONT_SIZE = 11;
 const LETTER_SPACING = 1;
@@ -123,8 +124,8 @@ export default function TetHero() {
       const seeded = (i) => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
       const colLen = [];
       for (let x = 0; x < cols; x++) {
-        // near-full columns: the curtain hangs as a solid woven banner with a
-        // slightly ragged bottom edge
+        // near-full columns: each column is an independent hanging strand
+        // (like a beard lock), with a slightly ragged bottom edge
         const shape = 0.97;
         const jag = (seeded(x) - 0.5) * 0.06 + (seeded(x * 3 + 7) - 0.5) * 0.03;
         colLen.push(Math.max(5, Math.round(rows * Math.max(0.88, Math.min(1, shape + jag)))));
@@ -133,11 +134,10 @@ export default function TetHero() {
         const idx = y * cols + x;
         const px = BLEED + x * sX, py = BLEED + y * sY;
         const dead = y >= colLen[x];
-        particles.push({ x: px, y: py, px, py, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
-        if (!dead) {
-          if (x > 0 && y < colLen[x - 1]) constraints.push({ a: idx - 1, b: idx, min: sX * 0.6, max: sX * 1.6 });
-          if (y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.3, max: sY * 1.1 });
-        }
+        // restX: the vertical line this strand springs back toward — no
+        // horizontal constraints between columns, so strands swing independently
+        particles.push({ x: px, y: py, px, py, restX: px, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
+        if (!dead && y > 0) constraints.push({ a: idx - cols, b: idx, min: sY * 0.3, max: sY * 1.1 });
       }
       const steps = particles.length > 2600 ? 60 : particles.length > 1400 ? 72 : 90;
       for (let s = 0; s < steps; s++) {
@@ -340,6 +340,12 @@ export default function TetHero() {
         p.x += vx; p.y += vy + GRAVITY;
       }
       for (let n = 0; n < SOLVE_ITERS; n++) solve(phys.constraints, ps);
+      // each strand hangs on its own — spring it back toward its resting
+      // vertical line so it doesn't drift now that columns aren't linked
+      for (const p of ps) {
+        if (p.pinned) continue;
+        p.x += (p.restX - p.x) * STRAND_SPRING;
+      }
       if (pointer.active) applyPointer(pointer.x, pointer.y);
       pointer.dx *= 0.4; pointer.dy *= 0.4;
       if (pointer.dragging >= 0) {

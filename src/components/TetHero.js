@@ -47,8 +47,12 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
 
   useEffect(() => {
     // canvas bleed around the beard box — big enough that strands dragged or
-    // flung anywhere in the hero never hit the canvas edge and get cut off
-    const BLEED = 700;
+    // flung anywhere in the hero never hit the canvas edge and get cut off.
+    // Horizontal needs to reach the screen edges from the 240px-wide centered
+    // box (±1320px covers a 2560px monitor); vertical stays tighter to keep
+    // the canvas allocation sane.
+    const BLEED_X = 1200;
+    const BLEED_Y = 700;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -123,8 +127,8 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height) return;
       buildAtlas();
-      canvas.width = Math.floor((width + BLEED * 2) * dpr);
-      canvas.height = Math.floor((height + BLEED * 2) * dpr);
+      canvas.width = Math.floor((width + BLEED_X * 2) * dpr);
+      canvas.height = Math.floor((height + BLEED_Y * 2) * dpr);
       const tX = Math.max(1, advance * LETTER_SPACING);
       const tY = Math.max(1, glyphH * LINE_HEIGHT);
       const cols = Math.max(8, Math.min(180, Math.round(width / tX) + 1));
@@ -146,7 +150,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       }
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
         const idx = y * cols + x;
-        const px = BLEED + x * sX, py = BLEED + y * sY;
+        const px = BLEED_X + x * sX, py = BLEED_Y + y * sY;
         const dead = y >= colLen[x];
         particles.push({ x: px, y: py, px, py, pinned: y === 0 || dead, basePinned: y === 0, dead, char: cs[(x * rows + y) % cs.length] });
         if (!dead) {
@@ -172,7 +176,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       phys.particles = particles; phys.constraints = constraints;
       phys.cols = cols; phys.rows = rows;
       phys.sX = sX; phys.sY = sY;
-      phys.width = width + BLEED * 2; phys.height = height + BLEED * 2;
+      phys.width = width + BLEED_X * 2; phys.height = height + BLEED_Y * 2;
     };
 
     const audio = { ctx: null, master: null, lastStrike: 0 };
@@ -494,7 +498,9 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       </div>
 
       {/* lion head + live beard */}
-      <div style={{ position: 'absolute', top: '5vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
+      {/* pointerEvents none: this full-width layer would otherwise swallow
+          clicks meant for elements below it (beard input is window-level) */}
+      <div style={{ position: 'absolute', top: '5vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2, pointerEvents: 'none' }}>
         {lionImgOk ? (
           <img
             src={`${process.env.PUBLIC_URL}/lion_head_no_beard.png`}
@@ -511,7 +517,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
         {/* chime curtain IS the lion's beard now (image has none): as wide as
             the chin, tucked up behind the jaw fur so strands grow from it */}
         <div style={{ position: 'relative', width: 240, height: '50vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
-          <canvas ref={canvasRef} style={{ position: 'absolute', left: -700, top: -700, width: 'calc(100% + 1400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
+          <canvas ref={canvasRef} style={{ position: 'absolute', left: -1200, top: -700, width: 'calc(100% + 2400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>
 

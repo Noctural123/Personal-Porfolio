@@ -3,6 +3,7 @@ import { Calendar, ExternalLink, Github } from 'lucide-react';
 import {
   SiReact, SiTypescript, SiJavascript, SiNodedotjs, SiPostgresql, SiMongodb,
   SiExpress, SiHtml5, SiCss3, SiOpenai, SiAmazonaws, SiPrisma, SiPython,
+  SiNextdotjs, SiStripe, SiFfmpeg, SiPandas, SiScikitlearn,
 } from 'react-icons/si';
 import { MONO, PALETTE, SERIF, asset } from '../theme';
 import { PROJECTS, SOCIALS } from '../../../content/portfolioData';
@@ -11,6 +12,7 @@ const TECH_ICONS = {
   React: SiReact, TypeScript: SiTypescript, JavaScript: SiJavascript, 'Node.js': SiNodedotjs,
   PostgreSQL: SiPostgresql, MongoDB: SiMongodb, Express: SiExpress, HTML5: SiHtml5,
   CSS3: SiCss3, 'OpenAI API': SiOpenai, AWS: SiAmazonaws, Prisma: SiPrisma, Python: SiPython,
+  'Next.js': SiNextdotjs, Stripe: SiStripe, FFmpeg: SiFfmpeg, pandas: SiPandas, 'scikit-learn': SiScikitlearn,
 };
 
 const linkBtn = (primary) => ({
@@ -59,9 +61,11 @@ export default function ProjectsSection() {
             </div>
 
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-              <a href={p.github} target="_blank" rel="noopener noreferrer" style={linkBtn(false)}>
-                <Github size={14} /> Code
-              </a>
+              {p.github && (
+                <a href={p.github} target="_blank" rel="noopener noreferrer" style={linkBtn(false)}>
+                  <Github size={14} /> Code
+                </a>
+              )}
               {p.live && (
                 <a href={p.live} target="_blank" rel="noopener noreferrer" style={linkBtn(true)}>
                   <ExternalLink size={14} /> Live Demo

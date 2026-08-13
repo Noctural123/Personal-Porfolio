@@ -12,10 +12,10 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{ position: 'relative' }}>
       <TetHero activeSection={activeSection} onToggleSection={toggleSection} />
       <SocialsDock />
-      <DragonSeal active={activeSection === 'contact'} onOpen={() => setActiveSection('contact')} />
+      <DragonSeal />
       <SectionDrawer activeSection={activeSection} onSelect={setActiveSection} onClose={() => setActiveSection(null)} />
     </div>
   );

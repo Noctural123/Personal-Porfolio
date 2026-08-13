@@ -468,9 +468,21 @@ export default function TetHero() {
       {/* hanging light-bulb nav */}
       <HangingLights />
 
+      {/* masthead — the name is printed into the linen behind everything,
+          magazine-cover style: the lion's crown feathers overlap the letters
+          and the nav lights hang in front. Signed with a red seal (con dấu),
+          安 being the Hán tự for "An", the way ink paintings are signed. */}
+      <div style={{ position: 'absolute', top: 64, left: 0, right: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 22, zIndex: 1, pointerEvents: 'none' }}>
+        <span style={{ font: `400 clamp(120px, 10.5vw, 200px)/0.95 ${SERIF}`, letterSpacing: '0.05em', color: '#4A3A2C', opacity: 0.88, mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>
+          AN NGUYỄN
+        </span>
+        <span aria-hidden="true" style={{ marginTop: 14, width: 54, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', background: '#B3402A', color: '#F3E6CE', borderRadius: 6, transform: 'rotate(4deg)', font: "700 32px/1 'Noto Serif TC', 'STIX Two Text', serif", boxShadow: '0 1px 4px rgba(50,35,15,0.25)', mixBlendMode: 'multiply' }}>
+          安
+        </span>
+      </div>
+
       {/* top bar */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', gap: 36, padding: '28px 48px', zIndex: 6 }}>
-        <div style={{ font: `700 15px/1 ${MONO}`, color: '#33291D' }}>An H. Nguyen</div>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '28px 48px', zIndex: 6 }}>
         <button
           onClick={togglePlay}
           aria-label={playing ? 'Mute chime sounds' : 'Unmute chime sounds'}

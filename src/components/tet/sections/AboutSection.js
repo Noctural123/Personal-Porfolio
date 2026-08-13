@@ -18,7 +18,7 @@ const LEADER_ICONS = { 'Vietnamese Eucharistic Youth Movement': Users, 'Lion Dan
 export default function AboutSection({ openLightbox }) {
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 28, alignItems: 'start' }}>
+      <div className="tet-cols-about">
         {/* bio */}
         <div style={card}>
           <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', marginBottom: 18 }}>
@@ -74,7 +74,7 @@ export default function AboutSection({ openLightbox }) {
         {LEADERSHIP.map((l) => {
           const Icon = LEADER_ICONS[l.title] || Users;
           return (
-            <div key={l.title} style={{ ...card, display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: 22, alignItems: 'stretch' }}>
+            <div key={l.title} className="tet-cols-leader" style={card}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                   <Icon size={20} color={PALETTE.seal} />

@@ -473,7 +473,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
   };
 
   return (
-    <section className="tet-hero" style={{ position: 'relative', width: '100%', minWidth: 1440, height: '130vh', background: `#C9B896 url(${process.env.PUBLIC_URL}/new_bg.png) center / cover no-repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
+    <section className="tet-hero" style={{ position: 'relative', width: '100%', height: '130vh', background: `#C9B896 url(${process.env.PUBLIC_URL}/new_bg.png) center / cover no-repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 
@@ -507,7 +507,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
             alt="Lion dance head"
             onError={() => setLionImgOk(false)}
             draggable={false}
-            style={{ width: 900, height: 'min(940px, 84vh)', objectFit: 'contain', position: 'relative', zIndex: 2 }}
+            style={{ width: 'min(900px, 96vw)', height: 'auto', maxHeight: 'min(940px, 84vh)', objectFit: 'contain', position: 'relative', zIndex: 2 }}
           />
         ) : (
           <div style={{ width: 900, height: 'min(940px, 84vh)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #8b7a5e', color: '#6b5c44', font: `13px/1.5 ${MONO}`, textAlign: 'center', padding: 16, boxSizing: 'border-box' }}>
@@ -516,7 +516,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
         )}
         {/* chime curtain IS the lion's beard now (image has none): as wide as
             the chin, tucked up behind the jaw fur so strands grow from it */}
-        <div style={{ position: 'relative', width: 240, height: '50vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
+        <div style={{ position: 'relative', width: 'min(240px, 37vw)', height: '50vh', marginTop: -80, zIndex: 1, overflow: 'visible' }}>
           <canvas ref={canvasRef} style={{ position: 'absolute', left: -1200, top: -700, width: 'calc(100% + 2400px)', height: 'calc(100% + 1400px)', display: 'block', pointerEvents: 'none' }} />
         </div>
       </div>

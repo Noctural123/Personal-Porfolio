@@ -34,9 +34,12 @@ export default function HangingLights({ activeSection, onToggle }) {
     const build = () => {
       const width = root.clientWidth;
       chains.length = 0;
+      // on narrow screens the lion fills the width, so shorten the strings
+      // to keep the bulbs up by the crown instead of over the face
+      const lenScale = width < 700 ? 0.42 : 1;
       LIGHTS.forEach((l, li) => {
         const ax = l.x * width;
-        const seg = l.len / (SEGS - 1);
+        const seg = (l.len * lenScale) / (SEGS - 1);
         const pts = [];
         for (let i = 0; i < SEGS; i++) {
           pts.push({ x: ax, y: i * seg, px: ax, py: i * seg });
@@ -146,7 +149,7 @@ export default function HangingLights({ activeSection, onToggle }) {
             }}
           >
             {/* Edison bulb sprite: dark at rest, lit while its drawer is open */}
-            <span style={{ position: 'relative', width: 55, height: 91, display: 'block' }}>
+            <span style={{ position: 'relative', width: 'min(55px, 12vw)', height: 'min(91px, 19.9vw)', display: 'block' }}>
               <img
                 src={`${process.env.PUBLIC_URL}/bulb_off.png`} alt="" draggable={false}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }}
@@ -160,7 +163,7 @@ export default function HangingLights({ activeSection, onToggle }) {
                 }}
               />
             </span>
-            <span style={{ marginTop: 10, font: `13px/1 ${MONO}`, letterSpacing: '0.05em', color: '#4A3A2C', textShadow: '0 1px 2px rgba(224, 211, 188, 0.9)' }}>
+            <span style={{ marginTop: 10, font: `clamp(10px, 2.8vw, 13px)/1 ${MONO}`, letterSpacing: '0.05em', color: '#4A3A2C', textShadow: '0 1px 2px rgba(224, 211, 188, 0.9)' }}>
               {l.label}
             </span>
           </button>

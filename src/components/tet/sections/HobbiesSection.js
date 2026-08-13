@@ -12,7 +12,7 @@ export default function HobbiesSection({ openLightbox }) {
       <p style={{ margin: '0 0 22px', font: `14px/1.7 ${MONO}`, color: PALETTE.engraved }}>
         Outside of my technical background, here are some of my current hobbies...
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 22 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: 22 }}>
         {HOBBIES.map((h) => {
           const Icon = ICONS[h.icon] || Plane;
           return (

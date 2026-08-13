@@ -25,7 +25,7 @@ const linkBtn = (primary) => ({
 export default function ProjectsSection({ openLightbox }) {
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(420px, 1fr))', gap: 22 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(420px, 100%), 1fr))', gap: 22 }}>
         {PROJECTS.map((p) => (
           <div key={p.title} style={{ background: PALETTE.cardBg, border: `1px solid ${PALETTE.rule}`, borderRadius: 10, padding: 22, display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>

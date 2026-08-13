@@ -79,7 +79,7 @@ export default function ContactSection() {
   );
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 34, alignItems: 'start' }}>
+    <div className="tet-cols-contact">
       {/* left: direct channels */}
       <div>
         <h3 style={{ margin: '0 0 12px', font: `400 24px/1.25 ${SERIF}`, color: PALETTE.ink }}>Let&apos;s Connect</h3>
@@ -103,7 +103,7 @@ export default function ContactSection() {
 
       {/* right: form */}
       <form onSubmit={handleSubmit} style={{ background: PALETTE.cardBg, border: `1px solid ${PALETTE.rule}`, borderRadius: 10, padding: 24, display: 'grid', gap: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
           <div>
             <label htmlFor="ct-name" style={label}>Name</label>
             <input id="ct-name" name="name" type="text" required placeholder="Your name" value={formData.name} onChange={onChange} style={field} />

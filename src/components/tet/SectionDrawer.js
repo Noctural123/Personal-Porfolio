@@ -93,7 +93,7 @@ export default function SectionDrawer({ activeSection, onSelect, onClose }) {
             <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.07, mixBlendMode: 'multiply', pointerEvents: 'none' }} />
 
             {/* header */}
-            <div style={{ position: 'relative', padding: '26px 48px 14px', borderBottom: `1px solid ${PALETTE.rule}` }}>
+            <div style={{ position: 'relative', padding: '26px clamp(16px, 4vw, 48px) 14px', borderBottom: `1px solid ${PALETTE.rule}` }}>
               <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ font: `12px/1 ${MONO}`, letterSpacing: '0.22em', textTransform: 'uppercase', color: PALETTE.engraved, marginBottom: 8 }}>
@@ -104,7 +104,7 @@ export default function SectionDrawer({ activeSection, onSelect, onClose }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
                   {/* the open drawer hides the other bulbs, so keep every
                       section one click away from inside it */}
-                  <nav style={{ display: 'flex', gap: 18 }}>
+                  <nav className="tet-drawer-nav" style={{ display: 'flex', gap: 18 }}>
                     {Object.entries(SECTIONS).map(([id, s]) => (
                       <button
                         key={id}
@@ -135,7 +135,7 @@ export default function SectionDrawer({ activeSection, onSelect, onClose }) {
             </div>
 
             {/* scrollable body — content crossfades when bulbs swap */}
-            <div ref={scrollRef} style={{ position: 'relative', height: 'calc(100% - 103px)', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', padding: '26px 48px 56px' }}>
+            <div ref={scrollRef} style={{ position: 'relative', height: 'calc(100% - 103px)', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', padding: '26px clamp(16px, 4vw, 48px) 56px' }}>
               {/* keyed remount = instant swap with a short fade-in; no exit
                   choreography (AnimatePresence mode="wait" could wedge the
                   entering child at opacity 0 on rapid section swaps) */}

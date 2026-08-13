@@ -40,11 +40,14 @@ export default function ProjectsSection() {
               <Calendar size={13} /> {p.date}
             </div>
 
-            {p.image && (
-              <a href={p.imageLink || p.github} target="_blank" rel="noopener noreferrer" title="Open project" style={{ display: 'block', borderRadius: 8, overflow: 'hidden', border: `1px solid ${PALETTE.rule}` }}>
-                <img src={asset(p.image)} alt={p.title} loading="lazy" decoding="async" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
-              </a>
-            )}
+            {p.image && (() => {
+              const img = <img src={asset(p.image)} alt={p.title} loading="lazy" decoding="async" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />;
+              const frame = { display: 'block', borderRadius: 8, overflow: 'hidden', border: `1px solid ${PALETTE.rule}` };
+              const href = p.imageLink || p.github;
+              return href
+                ? <a href={href} target="_blank" rel="noopener noreferrer" title="Open project" style={frame}>{img}</a>
+                : <span style={frame}>{img}</span>;
+            })()}
 
             <p style={{ margin: 0, font: `13px/1.7 ${MONO}`, color: PALETTE.inkSoft, flex: 1 }}>{p.description}</p>
 

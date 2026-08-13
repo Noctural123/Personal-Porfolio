@@ -468,13 +468,9 @@ export default function TetHero() {
       {/* hanging light-bulb nav */}
       <HangingLights />
 
-      {/* name — a small centered wordmark above the lion's crown, signed
-          with a red seal (con dấu), 安 being the Hán tự for "Ân" */}
-      <h1 style={{ position: 'absolute', top: 22, left: 0, right: 0, margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, zIndex: 6, pointerEvents: 'none', font: `400 clamp(26px, 2vw, 34px)/0.95 ${SERIF}`, letterSpacing: '0.3em', color: '#2E2416', mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>
+      {/* name — a small centered wordmark above the lion's crown */}
+      <h1 style={{ position: 'absolute', top: 22, left: 0, right: 0, margin: 0, textAlign: 'center', zIndex: 6, pointerEvents: 'none', font: `400 clamp(26px, 2vw, 34px)/0.95 ${SERIF}`, letterSpacing: '0.3em', textIndent: '0.3em', color: '#2E2416', mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>
         ÂN NGUYỄN
-        <span aria-hidden="true" style={{ width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', background: '#B3402A', color: '#F3E6CE', borderRadius: 4, transform: 'rotate(4deg)', font: "700 20px/1 'Noto Serif TC', 'STIX Two Text', serif", boxShadow: '0 1px 3px rgba(50,35,15,0.25)', mixBlendMode: 'multiply' }}>
-          安
-        </span>
       </h1>
 
       {/* top bar */}

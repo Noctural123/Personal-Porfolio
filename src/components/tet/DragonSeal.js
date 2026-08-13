@@ -52,7 +52,10 @@ export default function DragonSeal() {
             width: 85, height: 85, objectFit: 'contain', display: 'block',
             mixBlendMode: 'multiply',
             opacity: hover ? 0.95 : 0.72,
+            // scale from the bottom edge so the enlarged art never extends
+            // past the page bottom (that overflow showed as a dark bar)
             transform: `scale(${hover ? 1.38 : 1.32})`,
+            transformOrigin: '50% 100%',
             transition: 'opacity 180ms ease, transform 180ms ease',
           }}
         />

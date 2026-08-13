@@ -59,6 +59,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* the page IS the linen hero — make sure any overflow or overscroll shows
+   linen, never the legacy dark theme background */
+body {
+  background-color: #C9B896;
+}
+
 /* responsive two-column grids for the Tết drawer sections — collapse to a
    single column on narrow screens */
 .tet-cols-about { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: start; }

@@ -299,6 +299,10 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       }
     };
     const local = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    // the beard has no DOM box (window-level input), so drive the cursor by
+    // proximity: grab within reach of a strand, grabbing while holding one
+    const host = canvas.closest('section');
+    const setCursor = (v) => { if (host && host.style.cursor !== v) host.style.cursor = v; };
     const nearest = (x, y) => {
       let best = -1, bd = 2500; // ~50px pickup radius so grabbing a string is easy
       const ps = phys.particles;
@@ -348,6 +352,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
         pointer.active = true;
         strike(1, true, hit, 0);
       }
+      if (pointer.grabbed.length || hit >= 0) setCursor('grabbing');
     };
     const onMove = (e) => {
       if (suspendedRef.current) return;
@@ -360,6 +365,10 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       pointer.x = pt.x; pointer.y = pt.y; pointer.active = true; pointer.moved = true;
       const dist = pointerField(pt.x, pt.y);
       const active = disturbedIdx;
+      // grab whenever inside the strands' interaction field (the field
+      // itself pushes letters ~70-90px away, so a tight radius never hits)
+      if (pointer.grabbed.length) setCursor('grabbing');
+      else setCursor(active >= 0 ? 'grab' : '');
       if (lastHover >= 0 && (active !== lastHover || disturbedDist > 55)) armed[lastHover] = true;
       if (active >= 0 && disturbedDist <= 55) { lastHover = active; strike(dist, pointer.grabbed.length > 0, active, disturbedDist); }
       else lastHover = -1;
@@ -382,6 +391,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
       }
       pointer.down = false;
       pointer.active = false;
+      setCursor('');
     };
     window.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
@@ -473,7 +483,7 @@ export default function TetHero({ activeSection = null, onToggleSection }) {
   };
 
   return (
-    <section className="tet-hero" style={{ position: 'relative', width: '100%', height: '130vh', background: `#C9B896 url(${process.env.PUBLIC_URL}/new_bg.png) center / cover no-repeat`, overflow: 'hidden', userSelect: 'none', cursor: 'grab' }}>
+    <section className="tet-hero" style={{ position: 'relative', width: '100%', height: '130vh', background: `#C9B896 url(${process.env.PUBLIC_URL}/new_bg.png) center / cover no-repeat`, overflow: 'hidden', userSelect: 'none' }}>
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 

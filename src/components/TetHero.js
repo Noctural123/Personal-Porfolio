@@ -27,12 +27,18 @@ const LINE_HEIGHT = 1;
 const MONO = "'IBM Plex Mono', ui-monospace, Menlo, monospace";
 const SERIF = "'STIX Two Text', Georgia, serif";
 
-export default function TetHero() {
+export default function TetHero({ activeSection = null, onToggleSection }) {
   const canvasRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const playingRef = useRef(false);
   const ensureAudioRef = useRef(() => false);
   const [lionImgOk, setLionImgOk] = useState(true);
+  // while a drawer is open the beard must ignore the pointer, or drawer
+  // clicks would pluck/grab strands through the overlay
+  const suspendedRef = useRef(false);
+  useEffect(() => {
+    suspendedRef.current = activeSection != null;
+  }, [activeSection]);
 
   useEffect(() => {
     playingRef.current = playing;
@@ -300,6 +306,7 @@ export default function TetHero() {
       return best;
     };
     const onDown = (e) => {
+      if (suspendedRef.current) return;
       // click closes a fist around the beard: every strand point within
       // GRAB_RADIUS is caught and carried with the cursor, keeping its
       // offset so the handful holds its shape; everything else hangs free
@@ -339,6 +346,7 @@ export default function TetHero() {
       }
     };
     const onMove = (e) => {
+      if (suspendedRef.current) return;
       const pt = local(e);
       if (lastPos.has) {
         pointer.dx = Math.max(-24, Math.min(24, pt.x - lastPos.x));
@@ -465,8 +473,8 @@ export default function TetHero() {
       {/* paper grain — sits above everything so image and curtain share the texture */}
       <div className="tet-grain" style={{ position: 'absolute', inset: 0, opacity: 0.08, mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 10 }} />
 
-      {/* hanging light-bulb nav */}
-      <HangingLights />
+      {/* hanging light-bulb nav — lit bulb = open drawer */}
+      <HangingLights activeSection={activeSection} onToggle={onToggleSection} />
 
       {/* name — a small centered wordmark above the lion's crown */}
       <h1 style={{ position: 'absolute', top: 22, left: 0, right: 0, margin: 0, textAlign: 'center', zIndex: 6, pointerEvents: 'none', font: `400 clamp(26px, 2vw, 34px)/0.95 ${SERIF}`, letterSpacing: '0.3em', textIndent: '0.3em', color: '#2E2416', mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>

@@ -468,18 +468,14 @@ export default function TetHero() {
       {/* hanging light-bulb nav */}
       <HangingLights />
 
-      {/* masthead — the name is printed into the linen behind everything,
-          magazine-cover style: the lion's crown feathers overlap the letters
-          and the nav lights hang in front. Signed with a red seal (con dấu),
-          安 being the Hán tự for "An", the way ink paintings are signed. */}
-      <div style={{ position: 'absolute', top: 64, left: 0, right: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 22, zIndex: 1, pointerEvents: 'none' }}>
-        <span style={{ font: `400 clamp(120px, 10.5vw, 200px)/0.95 ${SERIF}`, letterSpacing: '0.05em', color: '#4A3A2C', opacity: 0.88, mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>
-          AN NGUYỄN
-        </span>
-        <span aria-hidden="true" style={{ marginTop: 14, width: 54, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', background: '#B3402A', color: '#F3E6CE', borderRadius: 6, transform: 'rotate(4deg)', font: "700 32px/1 'Noto Serif TC', 'STIX Two Text', serif", boxShadow: '0 1px 4px rgba(50,35,15,0.25)', mixBlendMode: 'multiply' }}>
+      {/* name — a small centered wordmark above the lion's crown, signed
+          with a red seal (con dấu), 安 being the Hán tự for "Ân" */}
+      <h1 style={{ position: 'absolute', top: 22, left: 0, right: 0, margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, zIndex: 6, pointerEvents: 'none', font: `400 clamp(26px, 2vw, 34px)/0.95 ${SERIF}`, letterSpacing: '0.3em', color: '#2E2416', mixBlendMode: 'multiply', whiteSpace: 'nowrap' }}>
+        ÂN NGUYỄN
+        <span aria-hidden="true" style={{ width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', background: '#B3402A', color: '#F3E6CE', borderRadius: 4, transform: 'rotate(4deg)', font: "700 20px/1 'Noto Serif TC', 'STIX Two Text', serif", boxShadow: '0 1px 3px rgba(50,35,15,0.25)', mixBlendMode: 'multiply' }}>
           安
         </span>
-      </div>
+      </h1>
 
       {/* top bar */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', padding: '28px 48px', zIndex: 6 }}>
@@ -494,7 +490,7 @@ export default function TetHero() {
       </div>
 
       {/* lion head + live beard */}
-      <div style={{ position: 'absolute', top: '2vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
+      <div style={{ position: 'absolute', top: '5vh', left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
         {lionImgOk ? (
           <img
             src={`${process.env.PUBLIC_URL}/lion_head_no_beard.png`}
@@ -515,26 +511,6 @@ export default function TetHero() {
         </div>
       </div>
 
-      {/* left headline — top-anchored so it stays in the first viewport now
-          that the section extends past 100vh for the beard */}
-      <div style={{ position: 'absolute', left: '5%', top: '64vh', width: 400, zIndex: 6 }}>
-        <div style={{ font: `13px/1.4 ${MONO}`, color: '#6b5c44', marginBottom: 20 }}>
-          <span style={{ color: '#4A3A2C', fontWeight: 700 }}>Duyên</span> A chance encounter
-        </div>
-        <h1 style={{ margin: 0, font: `400 50px/1.1 ${SERIF}`, letterSpacing: '-0.01em', color: '#33291D', textWrap: 'pretty' }}>
-          Lion heads —— loud drums, quiet code, rivers full of lantern light
-        </h1>
-      </div>
-
-      {/* bottom-right blurb — top-anchored to stay in the first viewport */}
-      <div style={{ position: 'absolute', right: '6%', top: '79vh', width: 270, zIndex: 6 }}>
-        <div style={{ font: `13px/1.8 ${MONO}`, color: '#5a4c38' }}>
-          Drift through projects, odd experiments, and everything I build between lion dance seasons.
-        </div>
-        <a href="#contact" style={{ display: 'inline-block', marginTop: 16, font: `13px/1 ${MONO}`, borderBottom: '1px solid #33291D', paddingBottom: 2 }}>
-          Contact
-        </a>
-      </div>
     </section>
   );
 }

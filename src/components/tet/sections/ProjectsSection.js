@@ -22,7 +22,7 @@ const linkBtn = (primary) => ({
   color: PALETTE.linen, border: 'none',
 });
 
-export default function ProjectsSection() {
+export default function ProjectsSection({ openLightbox }) {
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(420px, 1fr))', gap: 22 }}>
@@ -40,14 +40,17 @@ export default function ProjectsSection() {
               <Calendar size={13} /> {p.date}
             </div>
 
-            {p.image && (() => {
-              const img = <img src={asset(p.image)} alt={p.title} loading="lazy" decoding="async" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />;
-              const frame = { display: 'block', borderRadius: 8, overflow: 'hidden', border: `1px solid ${PALETTE.rule}` };
-              const href = p.imageLink || p.github;
-              return href
-                ? <a href={href} target="_blank" rel="noopener noreferrer" title="Open project" style={frame}>{img}</a>
-                : <span style={frame}>{img}</span>;
-            })()}
+            {p.image && (
+              <button
+                type="button"
+                title="View screenshot"
+                aria-label={`View ${p.title} screenshot`}
+                onClick={() => openLightbox && openLightbox([p.image], 0)}
+                style={{ display: 'block', width: '100%', padding: 0, borderRadius: 8, overflow: 'hidden', border: `1px solid ${PALETTE.rule}`, background: 'none', cursor: 'zoom-in' }}
+              >
+                <img src={asset(p.image)} alt={p.title} loading="lazy" decoding="async" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
+              </button>
+            )}
 
             <p style={{ margin: 0, font: `13px/1.7 ${MONO}`, color: PALETTE.inkSoft, flex: 1 }}>{p.description}</p>
 

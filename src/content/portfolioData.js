@@ -15,7 +15,7 @@ export const ABOUT_BULLETS = [
   { lead: 'Accelerated Master’s Student', rest: ' at OU with a strong foundation in computer science and mathematics' },
   { lead: '3 Years of Internship Experience', rest: ' at Paycom and the U.S. Department of Defense' },
   { lead: 'Full-Stack Development', rest: ' expertise: React, TypeScript, PHP, Java, Python, JavaScript, C#' },
-  { lead: 'AI Tooling', rest: ' — able to leverage AI tools like Claude Code and Cursor to build and ship faster' },
+  { lead: 'AI Tooling', rest: ': able to leverage AI tools like Claude Code and Cursor to build and ship faster' },
   { lead: 'Youth Leader', rest: ' at the Vietnamese Eucharistic Youth Movement' },
   { lead: 'Lion Dancer', rest: ' during Lunar New Year celebrations' },
 ];
@@ -53,7 +53,7 @@ export const LEADERSHIP = [
     role: 'Volunteering',
     period: 'Aug 2014 - Current',
     description:
-      'Perform lion dancing during Lunar New Year to raise funds for the church, while participating in off-season gigs throughout the year. Train younger children in lion dancing and cultural appreciation. Devote 200+ hours annually to practice, performances, and teaching.',
+      'Perform lion dancing during Lunar New Year to raise funds for the church, while participating in off-season gigs throughout the year, including a featured performance for the OKC Thunder at an NBA game. Train younger children in lion dancing and cultural appreciation. Devote 200+ hours annually to practice, performances, and teaching.',
     images: [
       '/Lion Dance/LionDance1.jpeg',
       '/Lion Dance/LionDance2.jpeg',
@@ -113,21 +113,21 @@ export const HOBBIES = [
 
 export const PROJECTS = [
   {
-    title: 'Quro — AI Video Generation SaaS',
+    title: 'Quro: AI Video Generation SaaS',
     description:
       'Full-stack AI video-generation SaaS: one prompt in, a publishable video out. Streamlines social media content creation with a brief-to-storyboard flow, scene voiceovers, and in-app editing. Engineered a crash-safe LLM pipeline across 4 AI APIs that resumes mid-run from any failed stage, plus an append-only Stripe credit ledger with transactional debits so failed runs are never charged.',
     tech: ['Next.js', 'React', 'TypeScript', 'PostgreSQL', 'Stripe', 'FFmpeg'],
     github: null,
-    date: '2026 — In Progress',
+    date: '2026 (In Progress)',
     image: '/Projects/quro.png',
     imageLink: null,
     live: null,
     featured: true,
   },
   {
-    title: 'F1 Telemetrix — CAN Bus Intrusion Detection',
+    title: 'F1 Telemetrix: CAN Bus Intrusion Detection',
     description:
-      'An extension built on top of an open-source project: simulated in-vehicle CAN bus traffic and attacks (injection, fuzzing) from 2.8M+ real F1 telemetry points. Built a 3-layer hybrid ML intrusion detection system (Isolation Forest, Random Forest) catching 100% of attacks, and exposed inflated single-run ML accuracy through cross-run evaluation — training on 4 runs, testing on unseen data.',
+      'An extension built on top of an open-source project: simulated in-vehicle CAN bus traffic and attacks (injection, fuzzing) from 2.8M+ real F1 telemetry points. Built a 3-layer hybrid ML intrusion detection system (Isolation Forest, Random Forest) catching 100% of attacks, and exposed inflated single-run ML accuracy through cross-run evaluation, training on 4 runs and testing on unseen data.',
     tech: ['Python', 'scikit-learn', 'FastF1', 'pandas', 'Arcade'],
     github: 'https://github.com/Noctural123/F1_Telemetrix',
     date: '2026',
@@ -139,7 +139,7 @@ export const PROJECTS = [
   {
     title: 'LeetCode AI Tracker Extension',
     description:
-      'Two-part productivity tool: a Chrome extension captures which LeetCode problems you solve as you solve them, and a companion web app serves as the dashboard and recommendation engine — tracking progress, insights, and personalized notes, and suggesting your next problem based on mastery and difficulty gaps.',
+      'Two-part productivity tool: a Chrome extension captures which LeetCode problems you solve as you solve them, and a companion web app serves as the dashboard and recommendation engine: it tracks progress, insights, and personalized notes, and suggests your next problem based on mastery and difficulty gaps.',
     tech: ['Python', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'OpenAI API', 'Prisma', 'AWS'],
     github: 'https://github.com/Noctural123/LeetCodeTracker',
     date: 'October 2025 - Present',
